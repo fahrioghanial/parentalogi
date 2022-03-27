@@ -1,7 +1,5 @@
 const port = process.env.APP_PORT || 3000;
 
-const apiBasePath = "/api/auth/";
-
 export const websiteDomain =
   process.env.APP_URL ||
   process.env.NEXT_PUBLIC_APP_URL ||
@@ -9,7 +7,7 @@ export const websiteDomain =
 
 export const appInfo = {
   appName: "Parentalogi",
-  websiteDomain,
+  websiteDomain: "http://localhost:3000",
   apiDomain: websiteDomain,
-  apiBasePath,
+  apiBasePath: "/api/auth",
 };

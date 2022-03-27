@@ -1,4 +1,4 @@
-import ThirdPartyEmailPasswordNode from "supertokens-node/recipe/thirdpartyemailpassword";
+import EmailPasswordNode from "supertokens-node/recipe/emailpassword";
 import SessionNode from "supertokens-node/recipe/session";
 import { appInfo } from "./appInfo";
 
@@ -6,10 +6,10 @@ export let backendConfig = () => {
   return {
     framework: "express",
     supertokens: {
-      connectionURI: "https://try.supertokens.io",
+      connectionURI: "http://localhost:3567",
     },
     appInfo,
-    recipeList: [ThirdPartyEmailPasswordNode.init(), SessionNode.init()],
+    recipeList: [EmailPasswordNode.init(), SessionNode.init()],
     isInServerlessEnv: true,
   };
 };

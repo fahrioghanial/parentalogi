@@ -1,16 +1,14 @@
 import React from "react";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyemailpassword";
+import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
 import supertokensNode from "supertokens-node";
 import { backendConfig } from "../config/backendConfig";
 import Session from "supertokens-node/recipe/session";
 
-const ThirdPartyEmailPasswordAuthNoSSR = dynamic(
-  new Promise((res) =>
-    res(ThirdPartyEmailPassword.ThirdPartyEmailPasswordAuth)
-  ),
+const EmailPasswordAuthNoSSR = dynamic(
+  new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
   { ssr: false }
 );
 
@@ -37,16 +35,16 @@ export async function getServerSideProps(context) {
 
 export default function Home(props) {
   return (
-    <ThirdPartyEmailPasswordAuthNoSSR>
+    <EmailPasswordAuthNoSSR>
       <ProtectedPage userId={props.userId} />
-    </ThirdPartyEmailPasswordAuthNoSSR>
+    </EmailPasswordAuthNoSSR>
   );
 }
 
 function ProtectedPage({ userId }) {
   async function logoutClicked() {
-    await ThirdPartyEmailPassword.signOut();
-    ThirdPartyEmailPassword.redirectToAuth();
+    await EmailPassword.signOut();
+    EmailPassword.redirectToAuth();
   }
 
   async function fetchUserData() {
