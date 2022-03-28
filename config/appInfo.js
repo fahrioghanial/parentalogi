@@ -8,6 +8,6 @@ export const websiteDomain =
 export const appInfo = {
   appName: "Parentalogi",
   websiteDomain: "http://localhost:3000",
-  apiDomain: websiteDomain,
-  apiBasePath: "/api/auth",
+  apiDomain: "http://localhost:3001",
+  apiBasePath: "/",
 };
