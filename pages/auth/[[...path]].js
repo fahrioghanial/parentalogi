@@ -1,4 +1,4 @@
-import Head from "next/head";
+import Layout from "../../components/layout";
 import React, { useEffect } from "react";
 import styles from "../../styles/Home.module.css";
 import dynamic from "next/dynamic";
@@ -15,16 +15,28 @@ export default function Auth() {
     if (SuperTokens.canHandleRoute() === false) {
       redirectToAuth();
     }
+
+    // document.getElementById("supertokens-root").innerHTML = "Masuk";
+    // document.shadowRoot.querySelectorAll("monkey")[0].innerHTML =
+    //   "change by class";
+    // document.shadow;
   }, []);
 
   return (
     <div className={styles.container}>
-      <Head>
-        <title>Parentalogi</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Layout title="Auth"></Layout>
 
       <main className={styles.main}>
+        <div className="container flex flex-col gap-4 ">
+          <img
+            className="w-[120px] m-auto"
+            src="/favicon.ico"
+            alt="Parentalogi"
+          />
+          <h1 className="text-[#3980BF] text-center font-semibold text-5xl font-asap">
+            Parentalogi
+          </h1>
+        </div>
         <SuperTokensComponentNoSSR />
       </main>
     </div>
