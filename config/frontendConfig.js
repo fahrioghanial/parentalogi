@@ -44,11 +44,11 @@ export let frontendConfig = () => {
         signInAndUpFeature: {
           signUpForm: {
             formFields: [
-              {
-                id: "username",
-                label: "Nama Pengguna",
-                placeholder: "Nama Pengguna",
-              },
+              // {
+              //   id: "username",
+              //   label: "Nama Pengguna",
+              //   placeholder: "Nama Pengguna",
+              // },
               {
                 id: "email",
                 label: "Email",
@@ -59,11 +59,11 @@ export let frontendConfig = () => {
                 label: "Kata Sandi",
                 placeholder: "Kata Sandi",
               },
-              {
-                id: "password-repeat",
-                label: "Ulangi Kata Sandi",
-                placeholder: "Ulangi Kata Sandi",
-              },
+              // {
+              //   id: "password-repeat",
+              //   label: "Ulangi Kata Sandi",
+              //   placeholder: "Ulangi Kata Sandi",
+              // },
             ],
           },
         },
