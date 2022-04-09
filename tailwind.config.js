@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       fontFamily: {
         asap: "Asap, sans-serif",
+        josefin: "Josefin Sans, sans-serif",
       },
     },
   },

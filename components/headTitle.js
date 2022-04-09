@@ -1,13 +1,12 @@
 import Head from "next/head";
 
-export default function Layout(props) {
+export default function HeadTitle(props) {
   return (
     <div>
       <Head>
         <title>
           Parentalogi {props.title != null ? " - " + props.title : ""}
         </title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
     </div>
   );

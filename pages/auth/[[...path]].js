@@ -1,9 +1,9 @@
-import Layout from "../../components/layout";
 import React, { useEffect } from "react";
 import styles from "../../styles/Home.module.css";
 import dynamic from "next/dynamic";
 import SuperTokens from "supertokens-auth-react";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
+import HeadTitle from "../../components/headTitle";
 
 const SuperTokensComponentNoSSR = dynamic(
   new Promise((res) => res(SuperTokens.getRoutingComponent)),
@@ -24,8 +24,7 @@ export default function Auth() {
 
   return (
     <div className={styles.container}>
-      <Layout title="Auth"></Layout>
-
+      <HeadTitle title="Auth"></HeadTitle>
       <main className={styles.main}>
         <div className="container flex flex-col gap-4 ">
           <img
