@@ -3,8 +3,8 @@ import styles from "../styles/Home.module.css";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import NavbarLanding from "../components/navbarLanding";
 
 export default function Home() {
   async function daftarClicked() {
@@ -24,15 +24,15 @@ export default function Home() {
       const fixedNav = header.offsetTop;
 
       if (window.pageYOffset > fixedNav) {
-        header.classList.add("navbar-fixed");
-      } else header.classList.remove("navbar-fixed");
+        header.classList.add("navbar-landing-fixed");
+      } else header.classList.remove("navbar-landing-fixed");
     };
   }, []);
 
   return (
     <>
       <HeadTitle />
-      <Navbar />
+      <NavbarLanding />
 
       {/* Home section start */}
       <section

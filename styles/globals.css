@@ -13,5 +13,9 @@
 }
 
 .navbar-fixed {
+  @apply fixed z-[9999] bg-black opacity-70;
+}
+
+.navbar-landing-fixed {
   @apply fixed z-[9999] bg-[#3E85C5] opacity-70;
 }
