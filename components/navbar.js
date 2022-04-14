@@ -1,6 +1,7 @@
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
+import Image from 'next/image';
 
 export default function NavbarLanding(props) {
   async function masukClicked() {
@@ -27,7 +28,7 @@ export default function NavbarLanding(props) {
           <div className="flex items-center justify-between relative">
             <div className="flex items-center px-4 md:px-16 ">
               <div className="mr-8 flex-none">
-                <img
+                <Image
                   src="favicon.ico"
                   alt="parentalogi"
                   className="py-2 md:p-0"

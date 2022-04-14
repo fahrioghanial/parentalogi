@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import SuperTokens from "supertokens-auth-react";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import HeadTitle from "../../components/headTitle";
+import Image from 'next/image';
 
 const SuperTokensComponentNoSSR = dynamic(
   new Promise((res) => res(SuperTokens.getRoutingComponent)),
@@ -27,7 +28,7 @@ export default function Auth() {
       <HeadTitle title="Auth"></HeadTitle>
       <main className={styles.main}>
         <div className="container flex flex-col gap-4 ">
-          <img
+          <Image
             className="w-[120px] m-auto"
             src="/favicon.ico"
             alt="Parentalogi"

@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Footer from "../components/footer";
 import NavbarLanding from "../components/navbarLanding";
+import Image from 'next/image';
 
 export default function Home() {
   async function daftarClicked() {
@@ -42,7 +43,7 @@ export default function Home() {
         <div className="container">
           <div className="flex flex-wrap">
             <div className="w-full self-center md:w-2/3">
-              <img
+              <Image
                 src="/Couple bicycle-bro.png"
                 alt="parentalogi"
                 className="max-w-full mx-auto"
@@ -107,23 +108,23 @@ export default function Home() {
                   <path
                     d="M4.16663 10H15.8333"
                     stroke="#3980BF"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M10.8334 15L15.8334 10"
                     stroke="#3980BF"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M10.8334 5L15.8334 10"
                     stroke="#3980BF"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </a>
@@ -157,23 +158,23 @@ export default function Home() {
                   <path
                     d="M4.16663 10H15.8333"
                     stroke="#3980BF"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M10.8334 15L15.8334 10"
                     stroke="#3980BF"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M10.8334 5L15.8334 10"
                     stroke="#3980BF"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </a>
@@ -208,23 +209,23 @@ export default function Home() {
                   <path
                     d="M4.16663 10H15.8333"
                     stroke="#3980BF"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M10.8334 15L15.8334 10"
                     stroke="#3980BF"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M10.8334 5L15.8334 10"
                     stroke="#3980BF"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </a>
