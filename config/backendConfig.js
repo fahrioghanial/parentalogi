@@ -6,7 +6,7 @@ export let backendConfig = () => {
   return {
     framework: "express",
     supertokens: {
-      connectionURI: "http://localhost:3567",
+      connectionURI: process.env.NEXT_PUBLIC_SUPERTOKENS_URL,
     },
     appInfo,
     recipeList: [EmailPasswordNode.init(), SessionNode.init()],
