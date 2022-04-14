@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 export default function Footer(props) {
   return (
     <>
@@ -8,7 +6,8 @@ export default function Footer(props) {
         <div className="container">
           <div className="flex flex-wrap gap-y-5 md:justify-between">
             <div className="w-full md:w-1/4">
-              <Image src="/favicon.ico" alt="parentalogi" />
+
+              <img src="/favicon.svg" alt="parentalogi" />
               <div className="flex gap-x-2 mt-3 text-white">
                 <a href="">About</a>
                 <a href="">Features</a>

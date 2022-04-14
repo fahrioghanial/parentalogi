@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Footer from "../components/footer";
 import NavbarLanding from "../components/navbarLanding";
-import Image from 'next/image';
 
 export default function Home() {
   async function daftarClicked() {
@@ -43,7 +42,7 @@ export default function Home() {
         <div className="container">
           <div className="flex flex-wrap">
             <div className="w-full self-center md:w-2/3">
-              <Image
+            <img
                 src="/Couple bicycle-bro.png"
                 alt="parentalogi"
                 className="max-w-full mx-auto"
