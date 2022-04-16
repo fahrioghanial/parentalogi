@@ -2,7 +2,6 @@ import HeadTitle from "../components/headTitle";
 import styles from "../styles/Home.module.css";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import Footer from "../components/footer";
 import NavbarLanding from "../components/navbarLanding";
 
@@ -10,24 +9,6 @@ export default function Home() {
   async function daftarClicked() {
     redirectToAuth("signup");
   }
-
-  useEffect(() => {
-    const hamburger = document.querySelector("#hamburger");
-    const navMenu = document.querySelector("#nav-menu");
-    hamburger.addEventListener("click", function () {
-      hamburger.classList.toggle("hamburger-active");
-      navMenu.classList.toggle("hidden");
-    });
-
-    window.onscroll = function () {
-      const header = document.querySelector("header");
-      const fixedNav = header.offsetTop;
-
-      if (window.pageYOffset > fixedNav) {
-        header.classList.add("navbar-landing-fixed");
-      } else header.classList.remove("navbar-landing-fixed");
-    };
-  }, []);
 
   return (
     <>
@@ -42,7 +23,7 @@ export default function Home() {
         <div className="container">
           <div className="flex flex-wrap">
             <div className="w-full self-center md:w-2/3">
-            <img
+              <img
                 src="/Couple bicycle-bro.png"
                 alt="parentalogi"
                 className="max-w-full mx-auto"

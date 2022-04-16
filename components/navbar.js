@@ -1,6 +1,7 @@
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
+import { useEffect } from "react";
 
 export default function NavbarLanding(props) {
   async function masukClicked() {
@@ -19,6 +20,32 @@ export default function NavbarLanding(props) {
     // EmailPassword.redirectToAuth();
   }
 
+  useEffect(() => {
+    const profilePicture = document.querySelector("#profile-picture");
+    const navMenu = document.querySelector("#nav-menu");
+    const navMenuInside = document.querySelector("#nav-menu-inside");
+    document.body.addEventListener("click", function () {
+      profilePicture.classList.remove("border-white");
+      profilePicture.classList.remove("border-4");
+      navMenuInside.classList.add("hidden");
+    });
+    profilePicture.addEventListener("click", function (ev) {
+      profilePicture.classList.toggle("border-white");
+      profilePicture.classList.toggle("border-4");
+      navMenuInside.classList.toggle("hidden");
+      ev.stopPropagation();
+    });
+
+    window.onscroll = function () {
+      const header = document.querySelector("header");
+      const fixedNav = header.offsetTop;
+
+      if (window.pageYOffset > fixedNav) {
+        header.classList.add("navbar-fixed");
+      } else header.classList.remove("navbar-fixed");
+    };
+  }, []);
+
   return (
     <>
       {/* Navbar start */}
@@ -28,7 +55,7 @@ export default function NavbarLanding(props) {
             <div className="flex items-center px-4 md:px-16 ">
               <div className="mr-8 flex-none">
                 <img
-                  src="favicon.svg"
+                  src="/favicon.ico"
                   alt="parentalogi"
                   className="py-2 md:p-0"
                 />

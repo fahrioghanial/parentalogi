@@ -22,7 +22,7 @@ export let frontendConfig = () => {
         },
         palette: {
           background: "#3980BF",
-          error: "#FFC3D8",
+          error: "#FF0000",
           textTitle: "#FFFFFF",
           textLabel: "#FFFFFF",
           textInput: "#000000",
@@ -44,11 +44,16 @@ export let frontendConfig = () => {
         signInAndUpFeature: {
           signUpForm: {
             formFields: [
-              // {
-              //   id: "username",
-              //   label: "Nama Pengguna",
-              //   placeholder: "Nama Pengguna",
-              // },
+              {
+                id: "nama_pengguna",
+                label: "Nama Pengguna",
+                placeholder: "Nama Pengguna",
+              },
+              {
+                id: "nama",
+                label: "Nama Lengkap",
+                placeholder: "Nama Lengkap",
+              },
               {
                 id: "email",
                 label: "Email",

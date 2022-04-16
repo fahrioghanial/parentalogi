@@ -6,8 +6,7 @@ export default function Footer(props) {
         <div className="container">
           <div className="flex flex-wrap gap-y-5 md:justify-between">
             <div className="w-full md:w-1/4">
-
-              <img src="/favicon.svg" alt="parentalogi" />
+              <img src="/favicon.svg" alt="parentalogi" className="w-24" />
               <div className="flex gap-x-2 mt-3 text-white">
                 <a href="">About</a>
                 <a href="">Features</a>

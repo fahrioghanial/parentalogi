@@ -57,38 +57,12 @@ function DashboardPage({ userId }) {
     }
   }
 
-  useEffect(() => {
-    const profilePicture = document.querySelector("#profile-picture");
-    const navMenu = document.querySelector("#nav-menu");
-    const navMenuInside = document.querySelector("#nav-menu-inside");
-    document.body.addEventListener("click", function () {
-      profilePicture.classList.remove("border-white");
-      profilePicture.classList.remove("border-4");
-      navMenuInside.classList.add("hidden");
-    });
-    profilePicture.addEventListener("click", function (ev) {
-      profilePicture.classList.toggle("border-white");
-      profilePicture.classList.toggle("border-4");
-      navMenuInside.classList.toggle("hidden");
-      ev.stopPropagation();
-    });
-
-    window.onscroll = function () {
-      const header = document.querySelector("header");
-      const fixedNav = header.offsetTop;
-
-      if (window.pageYOffset > fixedNav) {
-        header.classList.add("navbar-fixed");
-      } else header.classList.remove("navbar-fixed");
-    };
-  }, []);
-
   return (
     <>
       <HeadTitle />
       <Navbar />
       {/* Dashboard section start */}
-      <section id="dashboard" className="pt-32 font-asap bg-white">
+      <section id="dashboard" className="pt-32 font-asap ">
         <div className="container">
           <div className="flex flex-wrap">
             <div className="w-full self-top md:w-1/5 px-5 md:pl-10">

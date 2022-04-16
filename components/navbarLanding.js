@@ -1,5 +1,6 @@
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function NavbarLanding(props) {
   async function masukClicked() {
@@ -11,6 +12,24 @@ export default function NavbarLanding(props) {
   const aboutClicked = () => {
     router.push("/about");
   };
+
+  useEffect(() => {
+    const hamburger = document.querySelector("#hamburger");
+    const navMenu = document.querySelector("#nav-menu");
+    hamburger.addEventListener("click", function () {
+      hamburger.classList.toggle("hamburger-active");
+      navMenu.classList.toggle("hidden");
+    });
+
+    window.onscroll = function () {
+      const header = document.querySelector("header");
+      const fixedNav = header.offsetTop;
+
+      if (window.pageYOffset > fixedNav) {
+        header.classList.add("navbar-landing-fixed");
+      } else header.classList.remove("navbar-landing-fixed");
+    };
+  }, []);
 
   return (
     <>
