@@ -279,7 +279,7 @@ export default function Home() {
                           </div>
                         </div>
                         <a
-                          href=""
+                          href="#"
                           className="md:right-0 md:bottom-0 md:absolute md:m-0 bg-white rounded-xl text-[#3980BF] py-2 px-3 font-semibold mx-auto"
                         >
                           Simpan

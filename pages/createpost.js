@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import Editor from "../components/editor";
-import { comment } from "postcss";
 
 export default function CreatePost() {
   const [editorLoaded, setEditorLoaded] = useState(false);
@@ -81,6 +80,7 @@ export default function CreatePost() {
                   name="title"
                   id="title"
                   placeholder="Judul Post Baru"
+                  className="p-4 w-full"
                 />
               </div>
               <div className="w-full self-center">
@@ -89,6 +89,7 @@ export default function CreatePost() {
                   name="tag"
                   id="tag"
                   placeholder="Tambahkan hingga 4 tag"
+                  className="p-4 w-full"
                 />
               </div>
               <div className="w-full self-center">
