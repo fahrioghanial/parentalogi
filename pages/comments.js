@@ -20,10 +20,6 @@ export default function Comments() {
     });
   }, []);
 
-  // const backgroundImage = (foto) => {
-  //   document.getElementById("foto").style.backgroundImage = foto;
-  // };
-
   return (
     <>
       <HeadTitle />

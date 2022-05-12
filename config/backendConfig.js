@@ -10,6 +10,6 @@ export let backendConfig = () => {
     },
     appInfo,
     recipeList: [EmailPasswordNode.init(), SessionNode.init()],
-    isInServerlessEnv: true,
+    // isInServerlessEnv: true,
   };
 };

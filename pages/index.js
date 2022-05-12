@@ -10,6 +10,10 @@ export default function Home() {
     redirectToAuth("signup");
   }
 
+  async function masukClicked() {
+    redirectToAuth("signin");
+  }
+
   return (
     <>
       <HeadTitle />
@@ -18,7 +22,7 @@ export default function Home() {
       {/* Home section start */}
       <section
         id="home"
-        className="pt-32 font-asap bg-gradient-to-b from-[#3E85C5] via-transparent"
+        className="font-asap bg-gradient-to-b from-[#3E85C5] via-transparent"
       >
         <div className="container">
           <div className="flex flex-wrap">
@@ -30,10 +34,10 @@ export default function Home() {
               />
             </div>
             <div className="w-full self-center px-5 md:w-1/3">
-              <h1 className="text-3xl text-[#3980BF] font-semibold mb-3 md:text-5xl">
+              <h1 className="text-3xl text-[#3980BF] font-semibold mb-3 md:text-6xl">
                 Helping You
               </h1>
-              <p className="mb-5 text-justify">
+              <p className="mb-5 md:text-xl text-justify">
                 Selesaikan semua masalah yang anda hadapi bersama-sama di sini.
                 Forum diskusi yang umum dan bebas siap memberikan solusi untuk
                 anda.
@@ -76,38 +80,6 @@ export default function Home() {
               <p className="text-[#374151] mb-2">
                 Wadah bertukar pikiran sesama pengguna dalam web ini.
               </p>
-              <a href="" className="text-[#3980BF] flex items-center">
-                Lebih lengkap
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4.16663 10H15.8333"
-                    stroke="#3980BF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10.8334 15L15.8334 10"
-                    stroke="#3980BF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10.8334 5L15.8334 10"
-                    stroke="#3980BF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
             </div>
             <div className="w-full px-5 mb-10 md:w-1/3">
               <svg
@@ -126,38 +98,6 @@ export default function Home() {
               <p className="text-[#374151] mb-2">
                 Berikan sudut pandang anda terhadap suatu hal melalui post.
               </p>
-              <a href="" className="text-[#3980BF] flex items-center">
-                Lebih lengkap
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4.16663 10H15.8333"
-                    stroke="#3980BF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10.8334 15L15.8334 10"
-                    stroke="#3980BF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10.8334 5L15.8334 10"
-                    stroke="#3980BF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
             </div>
             <div className="w-full px-5 md:w-1/3">
               <svg
@@ -177,38 +117,6 @@ export default function Home() {
                 Temukan info terkini dari sebuah tag atau seorang penulis post
                 favorit anda.
               </p>
-              <a href="" className="text-[#3980BF] flex items-center">
-                Lebih lengkap
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4.16663 10H15.8333"
-                    stroke="#3980BF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10.8334 15L15.8334 10"
-                    stroke="#3980BF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10.8334 5L15.8334 10"
-                    stroke="#3980BF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
             </div>
           </div>
         </div>
@@ -222,7 +130,7 @@ export default function Home() {
         <div className="container">
           <div className="flex flex-wrap">
             <h1 className="w-full font-bold text-2xl mb-5 px-5 md:text-4xl">
-              Featured Post
+              Postingan Unggulan
             </h1>
             <div className="w-full px-4">
               <div className="rounded-t-xl shadow-lg overflow-hidden h-72 bg-[url('/test.png')]"></div>
@@ -278,12 +186,12 @@ export default function Home() {
                             <small>10 Komentar</small>
                           </div>
                         </div>
-                        <a
+                        {/* <a
                           href="#"
                           className="md:right-0 md:bottom-0 md:absolute md:m-0 bg-white rounded-xl text-[#3980BF] py-2 px-3 font-semibold mx-auto"
                         >
                           Simpan
-                        </a>
+                        </a> */}
                       </div>
                     </div>
                   </div>

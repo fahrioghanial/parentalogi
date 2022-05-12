@@ -15,11 +15,6 @@ export default function Auth() {
     if (SuperTokens.canHandleRoute() === false) {
       redirectToAuth();
     }
-
-    // document.getElementById("supertokens-root").innerHTML = "Masuk";
-    // document.shadowRoot.querySelectorAll("monkey")[0].innerHTML =
-    //   "change by class";
-    // document.shadow;
   }, []);
 
   return (

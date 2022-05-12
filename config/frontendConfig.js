@@ -7,9 +7,6 @@ export let frontendConfig = () => {
     appInfo,
     recipeList: [
       EmailPasswordReact.init({
-        emailVerificationFeature: {
-          mode: "REQUIRED",
-        },
         getRedirectionURL: async (context) => {
           if (context.action === "SUCCESS") {
             if (context.redirectToPath !== undefined) {
@@ -37,9 +34,6 @@ export let frontendConfig = () => {
           container: {
             fontFamily: "Asap, sans-serif",
           },
-          // headerTitle: {
-          //   display: "none",
-          // },
         },
         signInAndUpFeature: {
           signUpForm: {
@@ -64,11 +58,6 @@ export let frontendConfig = () => {
                 label: "Kata Sandi",
                 placeholder: "Kata Sandi",
               },
-              // {
-              //   id: "password-repeat",
-              //   label: "Ulangi Kata Sandi",
-              //   placeholder: "Ulangi Kata Sandi",
-              // },
             ],
           },
         },
