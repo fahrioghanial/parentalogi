@@ -2,7 +2,7 @@ import HeadTitle from "../../components/headTitle";
 import styles from "../../styles/Home.module.css";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
 import Image from "next/image";
@@ -13,7 +13,7 @@ import { GiSuitcase } from "react-icons/gi";
 import { BsFillBookmarkFill, BsBookmark } from "react-icons/bs";
 import moment from "moment";
 import "moment/locale/id";
-import Comments from "../comments";
+import Comments from "../../components/comments";
 import parse from "html-react-parser";
 
 export async function getStaticPaths() {
@@ -51,7 +51,17 @@ export default function Post({ post }) {
     redirectToAuth("signup");
   }
 
-  console.log(post);
+  const [user, setUser] = useState([]);
+  useEffect(() => {
+    fetch("https://icvmdev.duckdns.org/api/users/profile", {
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data);
+      });
+  }, []);
+
   return (
     <>
       <HeadTitle />
@@ -79,12 +89,15 @@ export default function Post({ post }) {
                     <div className="bg-[url('/test.png')] bg-center rounded-full w-20 flex-none h-20 mb-2"></div>
                     <div>
                       <h3 className="font-medium">{}</h3>
-                      <small>{moment(post.createdAt).fromNow()}</small>
+                      <small>
+                        {moment(post.createdAt).format("LL")} (
+                        {moment(post.createdAt).fromNow()})
+                      </small>
                       <h1 className="font-bold text-base my-2 md:text-2xl">
                         {post.judul}
                       </h1>
                       <div className="flex gap-x-1 mb-4 ">
-                        {post.tags.map((tag) => {
+                        {post.tags?.map((tag) => {
                           return (
                             <a href="" key={tag.id}>
                               #{tag.nama}
@@ -104,7 +117,11 @@ export default function Post({ post }) {
         </div>
       </section>
       {/* Post section end */}
-      <Comments></Comments>
+      <Comments
+        comments={post.comments}
+        id_post={post.id}
+        user_id={user.user_id}
+      ></Comments>
       <Footer />
     </>
   );

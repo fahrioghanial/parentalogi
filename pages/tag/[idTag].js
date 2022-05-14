@@ -1,14 +1,15 @@
 import React from "react";
-import styles from "../styles/Home.module.css";
+import styles from "../../styles/Home.module.css";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
 import supertokensNode from "supertokens-node";
-import { backendConfig } from "../config/backendConfig";
+import { backendConfig } from "../../config/backendConfig";
 import Session from "supertokens-node/recipe/session";
-import HeadTitle from "../components/headTitle";
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
+import HeadTitle from "../../components/headTitle";
+import Navbar from "../../components/navbar";
+import Footer from "../../components/footer";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
 import moment from "moment";
 import "moment/locale/id";
 import Link from "next/link";
@@ -18,112 +19,59 @@ const EmailPasswordAuthNoSSR = dynamic(
   { ssr: false }
 );
 
-// export async function getServerSideProps(context) {
-//   // this runs on the backend, so we must call init on supertokens-node SDK
-//   supertokensNode.init(backendConfig());
-//   let session;
-//   try {
-//     session = await Session.getSession(context.req, context.res);
-//   } catch (err) {
-//     if (err.type === Session.Error.TRY_REFRESH_TOKEN) {
-//       return { props: { fromSupertokens: "needs-refresh" } };
-//     } else if (err.type === Session.Error.UNAUTHORISED) {
-//       return { props: {} };
-//     } else {
-//       throw err;
-//     }
-//   }
-
-//   return {
-//     props: { userId: session.getUserId() },
-//   };
-// }
-
-export async function getStaticProps() {
-  const res = await fetch("https://icvmdev.duckdns.org/api/posts/");
-  const posts = await res.json();
-  return {
-    props: {
-      posts,
-    },
-    revalidate: 10,
-  };
-}
-
-export default function Dashboard({ posts }) {
+export default function Dashboard() {
   return (
     <EmailPasswordAuthNoSSR>
-      <DashboardPage posts={posts} />
+      <DashboardPage />
     </EmailPasswordAuthNoSSR>
   );
 }
 
-function DashboardPage({ posts }) {
-  // console.log(posts);
-  // posts = data;
-  // async function fetchUserData() {
-  //   const res = await fetch("/api/user");
-  //   if (res.status === 200) {
-  //     const json = await res.json();
-  //     alert(JSON.stringify(json));
-  //   }
-  // }
+function DashboardPage() {
+  const router = useRouter();
+  const data = router.query;
 
-  // const [posts, setPosts] = useState([]);
+  const [tag, setTag] = useState([]);
 
-  // useEffect(() => {
-  //   fetch("https://icvmdev.duckdns.org/api/posts/")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setPosts(data);
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetch(`https://icvmdev.duckdns.org/api/tags?id=${data.idTag}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTag(data);
+      });
+  }, []);
+
+  console.log(tag);
+
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetch("https://icvmdev.duckdns.org/api/posts/")
+      .then((res) => res.json())
+      .then((data) => {
+        setPosts(data);
+      });
+  }, []);
 
   return (
     <>
       <HeadTitle />
       <Navbar />
+      <div
+        className="w-full pt-28"
+        style={{
+          backgroundColor: `${tag.warna}`,
+        }}
+      ></div>
+      <h1 className="px-5 md:pl-10 mt-10 font-bold text-xl md:text-3xl">
+        Tag: {tag.nama}
+      </h1>
       {/* Dashboard section start */}
-      <section id="dashboard" className="pt-32 font-asap ">
+      <section id="dashboard" className="pt-12 font-asap ">
         <div className="container">
           <div className="flex flex-wrap">
-            {/* <div className="w-full self-top md:w-1/5 px-5 md:pl-10">
-              <div className="rounded-xl shadow-lg overflow-hidden mb-10">
-                <div className="py-8 px-6 bg-[#3980BF] text-white flex flex-col gap-2">
-                  <Link href={`/dashboard`}>
-                    <a className="font-semibold text-xl hover:text-black">
-                      Beranda
-                    </a>
-                  </Link>
-                  <Link href={`/tag`}>
-                    <a className="font-semibold text-xl hover:text-black">
-                      Daftar Bacaan
-                    </a>
-                  </Link>
-                  <Link href={`/tag`}>
-                    <a className="font-semibold text-xl hover:text-black">
-                      Tag
-                    </a>
-                  </Link>
-                  <Link href={`/tag`}>
-                    <a className="font-semibold text-xl hover:text-black">
-                      Tentang Kami
-                    </a>
-                  </Link>
-                </div>
-              </div>
-            </div> */}
             <div className="w-full self-center px-5 md:pl-10">
               <div className="flex flex-col md:flex-row mb-5 gap-5 md:gap-10 font-semibold text-xl md:text-3xl">
-                {/* <a className="md:text-2xl font-semibold text-[#3980BF]">
-                  Paling Relevan
-                </a>
-                <a className="md:text-2xl font-semibold text-[#3980BF]">
-                  Terbaru
-                </a>
-                <a className="md:text-2xl font-semibold text-[#3980BF]">
-                  Terpopuler
-                </a> */}
                 <Link href={`/dashboard`}>
                   <a className="hover:text-blue-500">Beranda</a>
                 </Link>

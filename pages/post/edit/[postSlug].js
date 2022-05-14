@@ -1,11 +1,11 @@
-import HeadTitle from "../../components/headTitle";
-import styles from "../../styles/Home.module.css";
+import HeadTitle from "../../../components/headTitle";
+import styles from "../../../styles/Home.module.css";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import Footer from "../../components/footer";
-import Navbar from "../../components/navbar";
-import Editor from "../../components/editor";
+import Footer from "../../../components/footer";
+import Navbar from "../../../components/navbar";
+import Editor from "../../../components/editor";
 import Link from "next/link";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
@@ -92,66 +92,36 @@ function CreatePost() {
   }
 
   const router = useRouter();
+  const temp = router.query;
+
+  useEffect(() => {
+    fetch(`https://icvmdev.duckdns.org/api/posts/${temp.postSlug}`, {
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setPostContent(data.isi_text);
+        setPostCover(data.foto_cover);
+        setPostTitle(data.judul);
+        setTags(data.tags);
+      });
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const post = { postTitle, tags, postContent, postCover };
-
-    fetch("https://icvmdev.duckdns.org/api/posts", {
-      method: "POST",
+    fetch(`https://icvmdev.duckdns.org/api/posts/${temp.postSlug}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "same-origin",
       body: JSON.stringify(post),
     }).then(() => {
-      console.log("new post added");
-      router.push("/profile");
+      console.log("post edited");
     });
-  };
 
-  const [baseImage, setBaseImage] = useState("");
-
-  const uploadImage = async (e) => {
-    const file = e.target.files[0];
-    const base64 = await convertBase64(file);
-    const base64string = await convertBase64String(file);
-    setBaseImage(base64);
-    setPostCover(base64string);
-    console.log(base64string);
-  };
-
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
-  const convertBase64String = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        const base64String = fileReader.result
-          .replace("data:", "")
-          .replace(/^.+,/, "");
-        resolve(base64String);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
+    router.back();
   };
 
   return (
@@ -170,7 +140,7 @@ function CreatePost() {
                     </div>
                   </a>
                 </Link>
-                <h1 className="font-semibold text-2xl">Buat Post</h1>
+                <h1 className="font-semibold text-2xl">Edit Post</h1>
               </div>
             </div>
           </div>
@@ -188,7 +158,7 @@ function CreatePost() {
                   className="p-4 w-full"
                 />
               </div>
-              <div className="w-1/2 self-center flex flex-col gap-4 mb-5">
+              <div className="w-1/2 self-center flex flex-col gap-4">
                 <h1>Pilih Tags </h1>
                 <div className="flex gap-2">
                   <select
@@ -284,17 +254,9 @@ function CreatePost() {
                 </div>
               </div>
               <div className="w-full self-center">
-                <input
-                  type="file"
-                  // value={postCover}
-                  // onChange={(e) => setPostCover(e.target.value)}
-                  onChange={(e) => uploadImage(e)}
-                />
-                <img src={baseImage} alt="cover" height="200px" />
-              </div>
-              <div className="w-full self-center">
                 <Editor
                   name="postContent"
+                  value={postContent}
                   onChange={(data) => {
                     setData(data);
                     setPostContent(data);
@@ -304,12 +266,17 @@ function CreatePost() {
 
                 {/* {JSON.stringify(data)} */}
               </div>
+              <input
+                type="hidden"
+                value={postCover}
+                onChange={(e) => setPostCover(e.target.value)}
+              />
               <button
                 className="border-blue-500 border-2 rounded-lg py-2 px-4"
                 type="submit"
                 onClick={combineTags}
               >
-                Kirim Post
+                Simpan Perubahan
               </button>
             </div>
           </div>

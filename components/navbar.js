@@ -44,11 +44,26 @@ export default function Navbar({ data }) {
     router.push("/post/createpost");
   };
 
-  function logoutClicked() {
-    signOut();
-    // router.push("/");
-    EmailPassword.redirectToAuth();
-  }
+  const logoutClicked = (e) => {
+    e.preventDefault();
+    fetch("https://icvmdev.duckdns.org/api/signout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+      // body: JSON.stringify(comment),
+    }).then(() => {
+      console.log("berhasil logout");
+      EmailPassword.redirectToAuth();
+    });
+  };
+
+  // async function logoutClicked() {
+  //   await signOut();
+  //   // router.push("/");
+  //   EmailPassword.redirectToAuth();
+  // }
 
   useEffect(() => {
     const profilePicture = document.querySelector("#profile-picture");
