@@ -17,7 +17,7 @@ export default function Navbar({ data }) {
   // console.log(data);
   const [user, setUser] = useState([]);
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/users/profile", {
+    fetch("https://parentalogi.me/api/users/profile", {
       credentials: "same-origin",
     })
       .then((res) => res.json())
@@ -46,7 +46,7 @@ export default function Navbar({ data }) {
 
   const logoutClicked = (e) => {
     e.preventDefault();
-    fetch("https://icvmdev.duckdns.org/api/signout", {
+    fetch("https://parentalogi.me/api/signout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

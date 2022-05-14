@@ -34,7 +34,7 @@ function DashboardPage() {
   const [tag, setTag] = useState([]);
 
   useEffect(() => {
-    fetch(`https://icvmdev.duckdns.org/api/tags?id=${data.idTag}`)
+    fetch(`https://parentalogi.me/api/tags?id=${data.idTag}`)
       .then((res) => res.json())
       .then((data) => {
         setTag(data);
@@ -46,7 +46,7 @@ function DashboardPage() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/posts/")
+    fetch("https://parentalogi.me/api/posts/")
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);

@@ -41,7 +41,7 @@ function CreateTag() {
     e.preventDefault();
     const tag = { nama, deskripsi, warna };
 
-    fetch("https://icvmdev.duckdns.org/api/tags", {
+    fetch("https://parentalogi.me/api/tags", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

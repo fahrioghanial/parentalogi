@@ -17,7 +17,7 @@ import Comments from "../../components/comments";
 import parse from "html-react-parser";
 
 export async function getStaticPaths() {
-  const res = await fetch("https://icvmdev.duckdns.org/api/posts/");
+  const res = await fetch("https://parentalogi.me/api/posts/");
   const data = await res.json();
   const paths = data.map((post) => {
     return {
@@ -35,7 +35,7 @@ export async function getStaticPaths() {
 export async function getStaticProps(context) {
   const { params } = context;
   const res = await fetch(
-    `https://icvmdev.duckdns.org/api/posts/${params.postSlug}`
+    `https://parentalogi.me/api/posts/${params.postSlug}`
   );
   const data = await res.json();
   return {
@@ -53,7 +53,7 @@ export default function Post({ post }) {
 
   const [user, setUser] = useState([]);
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/users/profile", {
+    fetch("https://parentalogi.me/api/users/profile", {
       credentials: "same-origin",
     })
       .then((res) => res.json())

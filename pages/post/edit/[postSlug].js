@@ -43,7 +43,7 @@ function CreatePost() {
 
   const [tagsExist, setTagsExist] = useState([]);
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/tags")
+    fetch("https://parentalogi.me/api/tags")
       .then((res) => res.json())
       .then((data) => {
         setTagsExist(data);
@@ -95,7 +95,7 @@ function CreatePost() {
   const temp = router.query;
 
   useEffect(() => {
-    fetch(`https://icvmdev.duckdns.org/api/posts/${temp.postSlug}`, {
+    fetch(`https://parentalogi.me/api/posts/${temp.postSlug}`, {
       credentials: "same-origin",
     })
       .then((res) => res.json())
@@ -110,7 +110,7 @@ function CreatePost() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const post = { postTitle, tags, postContent, postCover };
-    fetch(`https://icvmdev.duckdns.org/api/posts/${temp.postSlug}`, {
+    fetch(`https://parentalogi.me/api/posts/${temp.postSlug}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

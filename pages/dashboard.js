@@ -40,7 +40,7 @@ const EmailPasswordAuthNoSSR = dynamic(
 // }
 
 export async function getStaticProps() {
-  const res = await fetch("https://icvmdev.duckdns.org/api/posts/");
+  const res = await fetch("https://parentalogi.me/api/posts/");
   const posts = await res.json();
   return {
     props: {
@@ -72,7 +72,7 @@ function DashboardPage({ posts }) {
   // const [posts, setPosts] = useState([]);
 
   // useEffect(() => {
-  //   fetch("https://icvmdev.duckdns.org/api/posts/")
+  //   fetch("https://parentalogi.me/api/posts/")
   //     .then((res) => res.json())
   //     .then((data) => {
   //       setPosts(data);

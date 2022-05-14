@@ -35,7 +35,7 @@ function EditComment() {
 
   const [isiText, setIsiText] = useState("");
   useEffect(() => {
-    fetch(`https://icvmdev.duckdns.org/api/comments/${data.commentId}`, {
+    fetch(`https://parentalogi.me/api/comments/${data.commentId}`, {
       credentials: "same-origin",
     })
       .then((res) => res.json())
@@ -47,7 +47,7 @@ function EditComment() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`https://icvmdev.duckdns.org/api/comments/${data.commentId}`, {
+    fetch(`https://parentalogi.me/api/comments/${data.commentId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

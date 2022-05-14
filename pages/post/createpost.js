@@ -43,7 +43,7 @@ function CreatePost() {
 
   const [tagsExist, setTagsExist] = useState([]);
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/tags")
+    fetch("https://parentalogi.me/api/tags")
       .then((res) => res.json())
       .then((data) => {
         setTagsExist(data);
@@ -97,7 +97,7 @@ function CreatePost() {
     e.preventDefault();
     const post = { postTitle, tags, postContent, postCover };
 
-    fetch("https://icvmdev.duckdns.org/api/posts", {
+    fetch("https://parentalogi.me/api/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

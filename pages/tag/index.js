@@ -16,7 +16,7 @@ export default function Home() {
 
   const [tags, setTags] = useState([]);
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/tags")
+    fetch("https://parentalogi.me/api/tags")
       .then((res) => res.json())
       .then((data) => {
         setTags(data);

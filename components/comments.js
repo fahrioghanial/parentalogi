@@ -28,7 +28,7 @@ export default function Comments({ comments, id_post, user_id }) {
     e.preventDefault();
     const comment = { postId, isiText, orangtua };
 
-    fetch("https://icvmdev.duckdns.org/api/comments", {
+    fetch("https://parentalogi.me/api/comments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export default function Comments({ comments, id_post, user_id }) {
   const handleDeleteComment = async (id_comment) => {
     var result = confirm("Hapus Komentar?");
     if (result) {
-      fetch(`https://icvmdev.duckdns.org/api/comments/${id_comment}`, {
+      fetch(`https://parentalogi.me/api/comments/${id_comment}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
