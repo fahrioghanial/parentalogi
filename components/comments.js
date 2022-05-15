@@ -6,29 +6,42 @@ import { useEffect, useRef, useState } from "react";
 import Footer from "./footer";
 import Navbar from "./navbar";
 import Editor from "./editor";
-import { comment } from "postcss";
-import { getComments as getCommentsApi } from "../data/comments";
+import { AiOutlineMenu, AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import Link from "next/link";
 import moment from "moment";
 import "moment/locale/id";
 
-export default function Comments({ comments, id_post, user_id }) {
+export default function Comments({ comments, id_post, username, post_slug }) {
   const [postId, setPostId] = useState(id_post);
   const [isiText, setIsiText] = useState("");
   const [orangtua, setOrangtua] = useState(0);
+  const [allComments, setAllComments] = useState([]);
+
   const router = useRouter();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${post_slug}/comments`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setAllComments(data);
+      });
+  }, []);
 
-  const rootComments = comments.filter((comments) => comments.orang_tua == 0);
+  const rootComments = allComments.filter(
+    (allComments) => allComments.orang_tua == 0
+  );
 
-  const replyComments = comments.filter((comments) => comments.orang_tua != 0);
+  const replyComments = allComments.filter(
+    (allComments) => allComments.orang_tua != 0
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const comment = { postId, isiText, orangtua };
 
-    fetch("https://icvmdev.duckdns.org/api/comments", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,26 +50,69 @@ export default function Comments({ comments, id_post, user_id }) {
       body: JSON.stringify(comment),
     }).then(() => {
       console.log("new comment added");
+      router.reload(window.location.pathname);
     });
-
-    router.reload(window.location.pathname);
   };
 
   const handleDeleteComment = async (id_comment) => {
     var result = confirm("Hapus Komentar?");
     if (result) {
-      fetch(`https://icvmdev.duckdns.org/api/comments/${id_comment}`, {
-        method: "DELETE",
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/comments/${id_comment}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "same-origin",
+        }
+      ).then(() => {
+        console.log("comment deleted");
+        fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${post_slug}/comments`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            setAllComments(data);
+          });
+        // router.reload(window.location.pathname);
+      });
+    }
+  };
+
+  const [isLike, setIsLike] = useState("");
+  const [likeCount, setLikeCount] = useState();
+
+  const handleLikeComment = async (comment_id) => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/comments/${comment_id}/upvote`,
+      {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "same-origin",
-      }).then(() => {
-        console.log("comment deleted");
+      }
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        setIsLike(res.message);
+        console.log(isLike);
+        fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${post_slug}/comments`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            setAllComments(data);
+          });
       });
-      router.reload(window.location.pathname);
-    }
   };
+
+  // const replyForm = useRef(null);
+
+  // function showReplyForm() {
+  //   replyForm.current.classList.remove("hidden");
+  // }
 
   return (
     <>
@@ -85,7 +141,6 @@ export default function Comments({ comments, id_post, user_id }) {
                   <div className="w-full self-center mb-3">
                     <textarea
                       name=""
-                      // cols="100"
                       value={isiText}
                       onChange={(e) => setIsiText(e.target.value)}
                       placeholder="Tulis Komentar"
@@ -93,7 +148,7 @@ export default function Comments({ comments, id_post, user_id }) {
                     ></textarea>
                   </div>
                   <button
-                    className="rounded-xl text-[#3980BF] py-2 px-3 font-semibold border-[#3980BF] border-2"
+                    className="rounded-xl text-[#3980BF] py-2 px-3 font-semibold border-[#3980BF] border-2 hover:bg-blue-700 hover:text-white"
                     type="submit"
                   >
                     Kirim
@@ -117,7 +172,9 @@ export default function Comments({ comments, id_post, user_id }) {
                       // }}
                     ></div>
                     <div>
-                      <h3 className="font-medium">{rootComment.id_penulis}</h3>
+                      <h3 className="font-medium">
+                        {rootComment.data_penulis.nama}
+                      </h3>
                       <small>
                         {moment(rootComment.createdAt).format("LLL")}
                         {/* ({moment(rootComment.createdAt).fromNow()}) */}
@@ -130,29 +187,52 @@ export default function Comments({ comments, id_post, user_id }) {
                       <h1 className=" text-base my-2 md:text-xl">
                         {rootComment.isi_text}
                       </h1>
+                      <div className="flex">
+                        <button
+                          onClick={() => handleLikeComment(rootComment.id)}
+                        >
+                          <AiFillHeart
+                            className="hover:text-red-600"
+                            size="30px"
+                          />
+                        </button>
+                        <p className="text-md  my-auto mr-5 ml-1">
+                          {rootComment.jumlah_disukai}{" "}
+                        </p>
+                        <button className="rounded-xl text-white bg-blue-500  py-2 px-3 font-semibold hover:bg-blue-900">
+                          <Link
+                            href={{
+                              pathname: `/comment/replycomment/${rootComment.id}`,
+                            }}
+                          >
+                            <a>Balas</a>
+                          </Link>
+                        </button>
+                      </div>
                     </div>
                   </div>
-                  {/* {rootComment.id_penulis == user_id && ( */}
-                  {/* <> */}
-                  <button className="rounded-xl bg-yellow-300 py-2 px-3 font-semibold hover:bg-yellow-600 md:absolute md:right-28 md:bottom-8">
-                    <Link
-                      href={{
-                        pathname: `/editcomment/${rootComment.id}`,
-                      }}
-                    >
-                      <a>Edit</a>
-                    </Link>
-                  </button>
-                  <button
-                    className="rounded-xl text-white bg-red-600 py-2 px-3 font-semibold hover:bg-red-900 md:absolute md:right-8 md:bottom-8"
-                    onClick={() => handleDeleteComment(rootComment.id)}
-                  >
-                    Hapus
-                  </button>
-                  {/* </> */}
-                  {/* )} */}
+                  {rootComment.data_penulis.nama_pengguna == username && (
+                    <>
+                      <button className="rounded-xl bg-yellow-300 py-2 px-3 font-semibold hover:bg-yellow-600 md:absolute md:right-28 md:bottom-8">
+                        <Link
+                          href={{
+                            pathname: `/comment/editcomment/${rootComment.id}`,
+                          }}
+                        >
+                          <a>Edit</a>
+                        </Link>
+                      </button>
+                      <button
+                        className="rounded-xl text-white bg-red-600 py-2 px-3 font-semibold hover:bg-red-900 md:absolute md:right-8 md:bottom-8"
+                        onClick={() => handleDeleteComment(rootComment.id)}
+                      >
+                        Hapus
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
+
               {replyComments.map((replyComment) => {
                 return (
                   <div key={replyComment.id}>
@@ -168,7 +248,7 @@ export default function Comments({ comments, id_post, user_id }) {
                             ></div>
                             <div>
                               <h3 className="font-medium">
-                                {replyComment.id_penulis}
+                                {replyComment.data_penulis.nama}
                               </h3>
                               <small>
                                 {moment(replyComment.createdAt).format("LLL")}
@@ -184,23 +264,45 @@ export default function Comments({ comments, id_post, user_id }) {
                               <h1 className=" text-base my-2 md:text-xl">
                                 {replyComment.isi_text}
                               </h1>
+                              <div className="flex">
+                                <button
+                                  onClick={() =>
+                                    handleLikeComment(replyComment.id)
+                                  }
+                                >
+                                  <AiFillHeart
+                                    className="hover:text-red-600"
+                                    size="30px"
+                                  />
+                                </button>
+                                <p className="text-md  my-auto mr-5 ml-1">
+                                  {replyComment.jumlah_disukai}{" "}
+                                </p>
+                              </div>
                             </div>
                           </div>
-                          <button className="rounded-xl bg-yellow-300 py-2 px-3 font-semibold hover:bg-yellow-600 md:absolute md:right-28 md:bottom-8">
-                            <Link
-                              href={{
-                                pathname: `/editcomment/${replyComment.id}`,
-                              }}
-                            >
-                              <a>Edit</a>
-                            </Link>
-                          </button>
-                          <button
-                            className="rounded-xl text-white bg-red-600 py-2 px-3 font-semibold hover:bg-red-900 md:absolute md:right-8 md:bottom-8"
-                            onClick={() => handleDeleteComment(replyComment.id)}
-                          >
-                            Hapus
-                          </button>
+                          {replyComment.data_penulis.nama_pengguna ==
+                            username && (
+                            <>
+                              <button className="rounded-xl bg-yellow-300 py-2 px-3 font-semibold hover:bg-yellow-600 md:absolute md:right-28 md:bottom-8">
+                                <Link
+                                  href={{
+                                    pathname: `/comment/editcomment/${replyComment.id}`,
+                                  }}
+                                >
+                                  <a>Edit</a>
+                                </Link>
+                              </button>
+                              <button
+                                className="rounded-xl text-white bg-red-600 py-2 px-3 font-semibold hover:bg-red-900 md:absolute md:right-8 md:bottom-8"
+                                onClick={() =>
+                                  handleDeleteComment(replyComment.id)
+                                }
+                              >
+                                Hapus
+                              </button>
+                            </>
+                          )}
                         </div>
                       </div>
                     )}

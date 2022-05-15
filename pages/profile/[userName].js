@@ -1,10 +1,10 @@
-import HeadTitle from "../components/headTitle";
-import styles from "../styles/Home.module.css";
+import HeadTitle from "../../components/headTitle";
+import styles from "../../styles/Home.module.css";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Footer from "../components/footer";
-import Navbar from "../components/navbar";
+import Footer from "../../components/footer";
+import Navbar from "../../components/navbar";
 import Image from "next/image";
 import { AiOutlineMenu } from "react-icons/ai";
 import { GoLocation } from "react-icons/go";
@@ -20,10 +20,11 @@ export default function Profile() {
   }
 
   const router = useRouter();
+  const data = router.query;
 
   const [user, setUser] = useState([]);
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/users/profile", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${data.userName}`, {
       credentials: "same-origin",
     })
       .then((res) => res.json())
@@ -34,7 +35,7 @@ export default function Profile() {
 
   const [allPosts, setAllPosts] = useState([]);
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/posts")
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts`)
       .then((res) => res.json())
       .then((data) => {
         setAllPosts(data);
@@ -48,7 +49,7 @@ export default function Profile() {
   const handleDeletePost = async (id_post) => {
     var result = confirm("Hapus Postingan?");
     if (result) {
-      fetch(`https://icvmdev.duckdns.org/api/posts/${id_post}`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${id_post}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -135,7 +136,7 @@ export default function Profile() {
               </div>
             </div>
             <div className="w-full text-center mb-2 font-bold text-xl md:text-3xl">
-              <h1>Postingan Saya</h1>
+              <h1>Postingan {user.nama}</h1>
             </div>
             {posts.map((post) => {
               return (
@@ -149,8 +150,13 @@ export default function Profile() {
                       <div>
                         <h3 className="font-medium">{post.user.nama}</h3>
                         <small>
-                          {moment(post.createdAt).format("LL")} (
-                          {moment(post.createdAt).fromNow()})
+                          {moment(post.createdAt).format("LLL")}
+                          {/* ({moment(post.createdAt).fromNow()}) */}
+                          {post.telah_diubah
+                            ? " (Diubah pada " +
+                              moment(post.updatedAt).format("ll") +
+                              ")"
+                            : ""}
                         </small>
                         <h1 className="font-bold text-base my-2 md:text-2xl hover:">
                           <Link
@@ -166,9 +172,14 @@ export default function Profile() {
                         <div className="flex gap-x-1 mb-4 ">
                           {post.tags.map((tag) => {
                             return (
-                              <a href="" key={tag.id}>
-                                #{tag.nama}
-                              </a>
+                              <Link
+                                href={{
+                                  pathname: `/tag/${tag.nama}`,
+                                }}
+                                key={tag.id}
+                              >
+                                <a className="hover:text-black">#{tag.nama}</a>
+                              </Link>
                             );
                           })}
                         </div>
@@ -190,21 +201,6 @@ export default function Profile() {
                               </svg>
                               <small>{post.jumlah_disukai} Disukai </small>
                             </div>
-                            <div className="flex gap-x-2">
-                              <svg
-                                width="26"
-                                height="25"
-                                viewBox="0 0 26 25"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M6.01375 18.5625H21.4375C21.9348 18.5625 22.4117 18.365 22.7633 18.0133C23.115 17.6617 23.3125 17.1848 23.3125 16.6875V4.5C23.3125 4.00272 23.115 3.52581 22.7633 3.17417C22.4117 2.82254 21.9348 2.625 21.4375 2.625H4.5625C4.06522 2.625 3.58831 2.82254 3.23667 3.17417C2.88504 3.52581 2.6875 4.00272 2.6875 4.5V21.225L6.01375 18.5625ZM6.67188 20.4375L2.335 23.9062C2.19715 24.0163 2.03104 24.0853 1.85575 24.1052C1.68047 24.1251 1.50313 24.0951 1.34411 24.0187C1.18509 23.9424 1.05085 23.8227 0.95681 23.6734C0.862771 23.5242 0.812751 23.3514 0.8125 23.175V4.5C0.8125 3.50544 1.20759 2.55161 1.91085 1.84835C2.61411 1.14509 3.56794 0.75 4.5625 0.75H21.4375C22.4321 0.75 23.3859 1.14509 24.0891 1.84835C24.7924 2.55161 25.1875 3.50544 25.1875 4.5V16.6875C25.1875 17.6821 24.7924 18.6359 24.0891 19.3391C23.3859 20.0424 22.4321 20.4375 21.4375 20.4375H6.67188Z"
-                                  fill="white"
-                                />
-                              </svg>
-                              <small>10 Komentar</small>
-                            </div>
                           </div>
                           {/* <a
                             href=""
@@ -212,21 +208,6 @@ export default function Profile() {
                           >
                             Simpan
                           </a> */}
-                          <button className="rounded-xl bg-yellow-300 text-black py-2 px-3 font-semibold hover:bg-yellow-600 md:absolute md:right-28 md:bottom-8">
-                            <Link
-                              href={{
-                                pathname: `/post/edit/${post.slug}`,
-                              }}
-                            >
-                              <a>Edit</a>
-                            </Link>
-                          </button>
-                          <button
-                            className="rounded-xl text-white bg-red-600 py-2 px-3 font-semibold hover:bg-red-900 md:absolute md:right-8 md:bottom-8"
-                            onClick={() => handleDeletePost(post.slug)}
-                          >
-                            Hapus
-                          </button>
                         </div>
                       </div>
                     </div>

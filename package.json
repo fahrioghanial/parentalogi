@@ -13,6 +13,8 @@
     "@ckeditor/ckeditor5-build-classic": "^34.0.0",
     "@ckeditor/ckeditor5-react": "^5.0.0",
     "axios": "^0.27.2",
+    "browser-image-compression": "^2.0.0",
+    "compressorjs": "^1.1.1",
     "html-react-parser": "^1.4.12",
     "moment": "^2.29.3",
     "next": "12.1.0",

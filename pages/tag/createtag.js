@@ -41,7 +41,7 @@ function CreateTag() {
     e.preventDefault();
     const tag = { nama, deskripsi, warna };
 
-    fetch("https://icvmdev.duckdns.org/api/tags", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tags`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -98,7 +98,7 @@ function CreateTag() {
                 className="border-blue-500 border-2 rounded-lg py-2 px-4"
                 type="submit"
               >
-                Kirim Post
+                Buat Tag
               </button>
             </div>
           </div>

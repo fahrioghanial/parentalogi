@@ -14,6 +14,7 @@ import { SessionRequest } from "supertokens-node/framework/express";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import axios from "axios";
 import { ImCross } from "react-icons/im";
+import imageCompression from "browser-image-compression";
 
 const EmailPasswordAuthNoSSR = dynamic(
   new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
@@ -43,7 +44,7 @@ function CreatePost() {
 
   const [tagsExist, setTagsExist] = useState([]);
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/tags")
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tags`)
       .then((res) => res.json())
       .then((data) => {
         setTagsExist(data);
@@ -97,7 +98,7 @@ function CreatePost() {
     e.preventDefault();
     const post = { postTitle, tags, postContent, postCover };
 
-    fetch("https://icvmdev.duckdns.org/api/posts", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -114,8 +115,24 @@ function CreatePost() {
 
   const uploadImage = async (e) => {
     const file = e.target.files[0];
-    const base64 = await convertBase64(file);
-    const base64string = await convertBase64String(file);
+    console.log("originalFile instanceof Blob", file instanceof Blob); // true
+    console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
+
+    const compressedFile = await imageCompression(file, options);
+    console.log(
+      "compressedFile instanceof Blob",
+      compressedFile instanceof Blob
+    ); // true
+    console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+
+    const base64 = await convertBase64(compressedFile);
+    const base64string = await convertBase64String(compressedFile);
     setBaseImage(base64);
     setPostCover(base64string);
     console.log(base64string);
@@ -162,15 +179,17 @@ function CreatePost() {
         <header className="absolute top-0 left-0 w-full flex items-center z-10">
           <div className="container">
             <div className="flex items-center justify-between relative">
-              <div className="flex items-center px-4 md:px-16 ">
+              <div className="flex items-center px-4 md:px-16 mt-10">
                 <Link href="/dashboard">
                   <a>
-                    <div className="mr-8 flex-none">
+                    <div className="mr-8 flex-none hover:border-4 hover:border-blue-500 rounded-full">
                       <img src="/favicon.ico" alt="parentalogi" className="" />
                     </div>
                   </a>
                 </Link>
-                <h1 className="font-semibold text-2xl">Buat Post</h1>
+                <h1 className="font-semibold text-2xl md:text-3xl">
+                  Buat Post
+                </h1>
               </div>
             </div>
           </div>
@@ -178,7 +197,7 @@ function CreatePost() {
 
         <form onSubmit={handleSubmit}>
           <div className="container">
-            <div className="flex flex-wrap border-2 border-blue-500 p-10 rounded-lg gap-4">
+            <div className="flex flex-wrap border-2 border-blue-500 p-10 rounded-lg gap-4 mb-20">
               <div className="w-full self-center">
                 <input
                   type="text"
@@ -284,13 +303,8 @@ function CreatePost() {
                 </div>
               </div>
               <div className="w-full self-center">
-                <input
-                  type="file"
-                  // value={postCover}
-                  // onChange={(e) => setPostCover(e.target.value)}
-                  onChange={(e) => uploadImage(e)}
-                />
-                <img src={baseImage} alt="cover" height="200px" />
+                <input type="file" onChange={(e) => uploadImage(e)} />
+                <img src={baseImage} alt="cover" />
               </div>
               <div className="w-full self-center">
                 <Editor
@@ -301,8 +315,6 @@ function CreatePost() {
                   }}
                   editorLoaded={editorLoaded}
                 />
-
-                {/* {JSON.stringify(data)} */}
               </div>
               <button
                 className="border-blue-500 border-2 rounded-lg py-2 px-4"

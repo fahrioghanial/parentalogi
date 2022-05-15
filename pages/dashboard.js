@@ -18,29 +18,8 @@ const EmailPasswordAuthNoSSR = dynamic(
   { ssr: false }
 );
 
-// export async function getServerSideProps(context) {
-//   // this runs on the backend, so we must call init on supertokens-node SDK
-//   supertokensNode.init(backendConfig());
-//   let session;
-//   try {
-//     session = await Session.getSession(context.req, context.res);
-//   } catch (err) {
-//     if (err.type === Session.Error.TRY_REFRESH_TOKEN) {
-//       return { props: { fromSupertokens: "needs-refresh" } };
-//     } else if (err.type === Session.Error.UNAUTHORISED) {
-//       return { props: {} };
-//     } else {
-//       throw err;
-//     }
-//   }
-
-//   return {
-//     props: { userId: session.getUserId() },
-//   };
-// }
-
 export async function getStaticProps() {
-  const res = await fetch("https://icvmdev.duckdns.org/api/posts/");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/`);
   const posts = await res.json();
   return {
     props: {
@@ -59,75 +38,36 @@ export default function Dashboard({ posts }) {
 }
 
 function DashboardPage({ posts }) {
-  // console.log(posts);
-  // posts = data;
-  // async function fetchUserData() {
-  //   const res = await fetch("/api/user");
-  //   if (res.status === 200) {
-  //     const json = await res.json();
-  //     alert(JSON.stringify(json));
-  //   }
-  // }
+  const [user, setUser] = useState([]);
+  const [isSaved, setIsSaved] = useState(false);
 
-  // const [posts, setPosts] = useState([]);
-
-  // useEffect(() => {
-  //   fetch("https://icvmdev.duckdns.org/api/posts/")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setPosts(data);
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data);
+      });
+  }, []);
 
   return (
     <>
       <HeadTitle />
       <Navbar />
       {/* Dashboard section start */}
-      <section id="dashboard" className="pt-32 font-asap ">
+      <section id="dashboard" className="pt-24 font-asap ">
         <div className="container">
           <div className="flex flex-wrap">
-            {/* <div className="w-full self-top md:w-1/5 px-5 md:pl-10">
-              <div className="rounded-xl shadow-lg overflow-hidden mb-10">
-                <div className="py-8 px-6 bg-[#3980BF] text-white flex flex-col gap-2">
-                  <Link href={`/dashboard`}>
-                    <a className="font-semibold text-xl hover:text-black">
-                      Beranda
-                    </a>
-                  </Link>
-                  <Link href={`/tag`}>
-                    <a className="font-semibold text-xl hover:text-black">
-                      Daftar Bacaan
-                    </a>
-                  </Link>
-                  <Link href={`/tag`}>
-                    <a className="font-semibold text-xl hover:text-black">
-                      Tag
-                    </a>
-                  </Link>
-                  <Link href={`/tag`}>
-                    <a className="font-semibold text-xl hover:text-black">
-                      Tentang Kami
-                    </a>
-                  </Link>
-                </div>
-              </div>
-            </div> */}
             <div className="w-full self-center px-5 md:pl-10">
+              <h1 className="font-semibold text-2xl md:text-4xl text-blue-700 mb-10">
+                Beranda
+              </h1>
               <div className="flex flex-col md:flex-row mb-5 gap-5 md:gap-10 font-semibold text-xl md:text-3xl">
-                {/* <a className="md:text-2xl font-semibold text-[#3980BF]">
-                  Paling Relevan
-                </a>
-                <a className="md:text-2xl font-semibold text-[#3980BF]">
-                  Terbaru
-                </a>
-                <a className="md:text-2xl font-semibold text-[#3980BF]">
-                  Terpopuler
-                </a> */}
                 <Link href={`/dashboard`}>
                   <a className="hover:text-blue-500">Beranda</a>
                 </Link>
-                <Link href={`/tag`}>
+                <Link href={`/readinglists`}>
                   <a className="hover:text-blue-500">Daftar Bacaan</a>
                 </Link>
                 <Link href={`/tag`}>
@@ -149,13 +89,30 @@ function DashboardPage({ posts }) {
                     <div className="py-8 px-6 bg-[#3980BF] text-white relative">
                       <div className="lg:flex lg:gap-x-4">
                         <div className="bg-[url('/test.png')] bg-center rounded-full w-20 flex-none h-20 mb-2"></div>
-                        <div>
-                          <h3 className="font-medium">{post.user.nama}</h3>
+                        <div className="flex flex-col">
+                          <Link
+                            href={{
+                              pathname: `/profile/${
+                                post.user.nama_pengguna == user.nama_pengguna
+                                  ? ""
+                                  : post.user.nama_pengguna
+                              }`,
+                            }}
+                          >
+                            <a className="hover:text-black font-medium">
+                              {post.user.nama}
+                            </a>
+                          </Link>
                           <small>
-                            {moment(post.createdAt).format("LL")} (
-                            {moment(post.createdAt).fromNow()})
+                            {moment(post.createdAt).format("LLL")}
+                            {/* ({moment(post.createdAt).fromNow()}) */}
+                            {post.telah_diubah
+                              ? " (Diubah pada " +
+                                moment(post.updatedAt).format("ll") +
+                                ")"
+                              : ""}
                           </small>
-                          <h1 className="font-bold text-base my-2 md:text-2xl hover:">
+                          <h1 className="my-3">
                             <Link
                               href={{
                                 pathname: `/post/${post.slug}`,
@@ -169,9 +126,16 @@ function DashboardPage({ posts }) {
                           <div className="flex gap-x-1 mb-4 ">
                             {post.tags.map((tag) => {
                               return (
-                                <a href="" key={tag.id}>
-                                  #{tag.nama}
-                                </a>
+                                <Link
+                                  href={{
+                                    pathname: `/tag/${tag.nama}`,
+                                  }}
+                                  key={tag.id}
+                                >
+                                  <a className="hover:text-black">
+                                    #{tag.nama}
+                                  </a>
+                                </Link>
                               );
                             })}
                           </div>
@@ -193,28 +157,13 @@ function DashboardPage({ posts }) {
                                 </svg>
                                 <small>{post.jumlah_disukai} Disukai </small>
                               </div>
-                              <div className="flex gap-x-2">
-                                <svg
-                                  width="26"
-                                  height="25"
-                                  viewBox="0 0 26 25"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M6.01375 18.5625H21.4375C21.9348 18.5625 22.4117 18.365 22.7633 18.0133C23.115 17.6617 23.3125 17.1848 23.3125 16.6875V4.5C23.3125 4.00272 23.115 3.52581 22.7633 3.17417C22.4117 2.82254 21.9348 2.625 21.4375 2.625H4.5625C4.06522 2.625 3.58831 2.82254 3.23667 3.17417C2.88504 3.52581 2.6875 4.00272 2.6875 4.5V21.225L6.01375 18.5625ZM6.67188 20.4375L2.335 23.9062C2.19715 24.0163 2.03104 24.0853 1.85575 24.1052C1.68047 24.1251 1.50313 24.0951 1.34411 24.0187C1.18509 23.9424 1.05085 23.8227 0.95681 23.6734C0.862771 23.5242 0.812751 23.3514 0.8125 23.175V4.5C0.8125 3.50544 1.20759 2.55161 1.91085 1.84835C2.61411 1.14509 3.56794 0.75 4.5625 0.75H21.4375C22.4321 0.75 23.3859 1.14509 24.0891 1.84835C24.7924 2.55161 25.1875 3.50544 25.1875 4.5V16.6875C25.1875 17.6821 24.7924 18.6359 24.0891 19.3391C23.3859 20.0424 22.4321 20.4375 21.4375 20.4375H6.67188Z"
-                                    fill="white"
-                                  />
-                                </svg>
-                                <small>10 Komentar</small>
-                              </div>
                             </div>
-                            <a
-                              href=""
-                              className="md:right-10 md:bottom-10 md:absolute bg-white rounded-xl text-[#3980BF] py-2 px-3 font-semibold mx-auto"
+
+                            {/* <button
+                              className="md:right-10 md:bottom-10 md:absolute bg-white rounded-xl text-[#3980BF] py-2 px-3 font-semibold mx-auto hover:bg-blue-800 hover:text-white"
                             >
                               Simpan
-                            </a>
+                            </button> */}
                           </div>
                         </div>
                       </div>

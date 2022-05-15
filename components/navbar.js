@@ -6,18 +6,10 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
-import Session from "supertokens-node/recipe/session";
-
-const EmailPasswordAuthNoSSR = dynamic(
-  new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
-  { ssr: false }
-);
-
-export default function Navbar({ data }) {
-  // console.log(data);
+export default function Navbar() {
   const [user, setUser] = useState([]);
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/users/profile", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
       credentials: "same-origin",
     })
       .then((res) => res.json())
@@ -46,7 +38,7 @@ export default function Navbar({ data }) {
 
   const logoutClicked = (e) => {
     e.preventDefault();
-    fetch("https://icvmdev.duckdns.org/api/signout", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/signout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -100,7 +92,7 @@ export default function Navbar({ data }) {
             <div className="flex items-center px-4 md:px-16 ">
               <Link href="/dashboard">
                 <a>
-                  <div className="mr-8 flex-none">
+                  <div className="mr-8 flex-none rounded-full hover:border-blue-400 hover:border-4">
                     <img src="/favicon.ico" alt="parentalogi" className="" />
                   </div>
                 </a>
@@ -123,7 +115,7 @@ export default function Navbar({ data }) {
                 <ul className="flex md:text-xl">
                   <li className="group">
                     <button
-                      className="invisible md:visible text-white font-semibold md:py-2 md:mx-8 flex group-hover:bg-[#9CA3AF] md:bg-[#3980BF] md:rounded-lg md:px-3"
+                      className="invisible md:visible text-white font-semibold md:py-2 md:mx-8 flex group-hover:bg-blue-900 md:bg-blue-500 md:rounded-lg md:px-3"
                       onClick={createPostClicked}
                     >
                       Buat Post
@@ -132,7 +124,7 @@ export default function Navbar({ data }) {
                   <li className="group">
                     <button
                       id="profile-picture"
-                      className="bg-[url('/test.png')] bg-center rounded-full w-12 h-12 "
+                      className="bg-[url('/test.png')] bg-center rounded-full w-12 h-12 hover:border-blue-400 hover:border-4"
                     ></button>
                   </li>
                   <li className="">

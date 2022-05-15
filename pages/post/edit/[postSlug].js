@@ -14,6 +14,7 @@ import { SessionRequest } from "supertokens-node/framework/express";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import axios from "axios";
 import { ImCross } from "react-icons/im";
+import imageCompression from "browser-image-compression";
 
 const EmailPasswordAuthNoSSR = dynamic(
   new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
@@ -43,7 +44,7 @@ function CreatePost() {
 
   const [tagsExist, setTagsExist] = useState([]);
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/tags")
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tags`)
       .then((res) => res.json())
       .then((data) => {
         setTagsExist(data);
@@ -95,7 +96,7 @@ function CreatePost() {
   const temp = router.query;
 
   useEffect(() => {
-    fetch(`https://icvmdev.duckdns.org/api/posts/${temp.postSlug}`, {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${temp.postSlug}`, {
       credentials: "same-origin",
     })
       .then((res) => res.json())
@@ -110,7 +111,7 @@ function CreatePost() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const post = { postTitle, tags, postContent, postCover };
-    fetch(`https://icvmdev.duckdns.org/api/posts/${temp.postSlug}`, {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${temp.postSlug}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -119,9 +120,68 @@ function CreatePost() {
       body: JSON.stringify(post),
     }).then(() => {
       console.log("post edited");
+      router.back();
     });
+  };
 
-    router.back();
+  const [baseImage, setBaseImage] = useState("");
+
+  const uploadImage = async (e) => {
+    const file = e.target.files[0];
+    console.log("originalFile instanceof Blob", file instanceof Blob); // true
+    console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
+
+    const compressedFile = await imageCompression(file, options);
+    console.log(
+      "compressedFile instanceof Blob",
+      compressedFile instanceof Blob
+    ); // true
+    console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+
+    const base64 = await convertBase64(compressedFile);
+    const base64string = await convertBase64String(compressedFile);
+    setBaseImage(base64);
+    setPostCover(base64string);
+    console.log(base64string);
+  };
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  const convertBase64String = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        const base64String = fileReader.result
+          .replace("data:", "")
+          .replace(/^.+,/, "");
+        resolve(base64String);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
   };
 
   return (
@@ -254,6 +314,17 @@ function CreatePost() {
                 </div>
               </div>
               <div className="w-full self-center">
+                <input type="file" onChange={(e) => uploadImage(e)} />
+                <img
+                  src={
+                    baseImage == ""
+                      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cover/${postCover}`
+                      : baseImage
+                  }
+                  alt="cover"
+                />
+              </div>
+              <div className="w-full self-center">
                 <Editor
                   name="postContent"
                   value={postContent}
@@ -263,14 +334,7 @@ function CreatePost() {
                   }}
                   editorLoaded={editorLoaded}
                 />
-
-                {/* {JSON.stringify(data)} */}
               </div>
-              <input
-                type="hidden"
-                value={postCover}
-                onChange={(e) => setPostCover(e.target.value)}
-              />
               <button
                 className="border-blue-500 border-2 rounded-lg py-2 px-4"
                 type="submit"

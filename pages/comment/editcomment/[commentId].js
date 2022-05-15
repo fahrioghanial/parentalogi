@@ -1,11 +1,11 @@
-import HeadTitle from "../../components/headTitle";
-import styles from "../../styles/Home.module.css";
+import HeadTitle from "../../../components/headTitle";
+import styles from "../../../styles/Home.module.css";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import Footer from "../../components/footer";
-import Navbar from "../../components/navbar";
-import Editor from "../../components/editor";
+import Footer from "../../../components/footer";
+import Navbar from "../../../components/navbar";
+import Editor from "../../../components/editor";
 import Link from "next/link";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
@@ -35,9 +35,12 @@ function EditComment() {
 
   const [isiText, setIsiText] = useState("");
   useEffect(() => {
-    fetch(`https://icvmdev.duckdns.org/api/comments/${data.commentId}`, {
-      credentials: "same-origin",
-    })
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/comments/${data.commentId}`,
+      {
+        credentials: "same-origin",
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         setIsiText(data.isi_text);
@@ -47,18 +50,20 @@ function EditComment() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`https://icvmdev.duckdns.org/api/comments/${data.commentId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "same-origin",
-      body: JSON.stringify({ isiText }),
-    }).then(() => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/comments/${data.commentId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({ isiText }),
+      }
+    ).then(() => {
       console.log("comment edited");
+      router.back();
     });
-
-    router.back();
   };
 
   return (

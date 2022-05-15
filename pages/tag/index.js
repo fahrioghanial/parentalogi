@@ -15,13 +15,62 @@ export default function Home() {
   };
 
   const [tags, setTags] = useState([]);
+  const [followedTags, setFollowedTags] = useState([]);
+  // const followedTags = [];
+
   useEffect(() => {
-    fetch("https://icvmdev.duckdns.org/api/tags")
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tags`)
       .then((res) => res.json())
       .then((data) => {
         setTags(data);
       });
   }, []);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/followed-tags`, {
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        {
+          // data.map((d) => {
+          //   followedTags.push(d.id_tag);
+          // });
+          setFollowedTags(data);
+        }
+      });
+    console.log("ini followed tags diawal", followedTags);
+  }, []);
+
+  const handleFollowTag = async (id_tag) => {
+    // console.log(followedTags);
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tags/${id_tag}/follow`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        router.reload(window.location.pathname);
+      });
+
+    // fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/followed-tags`, {
+    //   credentials: "same-origin",
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     // data?.map((d) => {
+    //     //   setFollowedTags(
+    //     //     followedTags.filter((followedTags) => followedTags != d.id_tag)
+    //     //   );
+    //     // });
+    //     console.log("ini data:", data);
+    //     setFollowedTags(data);
+    //   });
+    // console.log("ini followed tags", followedTags);
+  };
 
   return (
     <>
@@ -63,7 +112,7 @@ export default function Home() {
                       <div>
                         <Link
                           href={{
-                            pathname: `/tag/${tag.id}`,
+                            pathname: `/tag/${tag.nama}`,
                           }}
                         >
                           <a className="font-semibold md:text-xl hover:text-blue-500">
@@ -71,12 +120,20 @@ export default function Home() {
                           </a>
                         </Link>
                         <h3 className="md:text-lg">{tag.deskripsi}</h3>
-                        <button
-                          className="rounded-lg text-white bg-[#3980BF] text-xl py-3 px-3 hover:shadow-lg hover:opacity-80 mt-2 mb-10"
-                          // onClick={daftarClicked}
-                        >
-                          Ikuti
-                        </button>
+                        {followedTags.map((ft) => {
+                          <button
+                            className={`rounded-lg text-white text-xl py-3 px-3 hover:shadow-lg hover:opacity-80 mt-2 mb-10 ${
+                              ft.id_tag == tag.id
+                                ? "bg-red-500"
+                                : "bg-green-500"
+                            }`}
+                            onClick={() => handleFollowTag(tag.id)}
+                          >
+                            {ft.id_tag == tag.id
+                              ? "Berhenti Mengikuti"
+                              : "Ikuti"}
+                          </button>;
+                        })}
                       </div>
                     </div>
                   </div>
