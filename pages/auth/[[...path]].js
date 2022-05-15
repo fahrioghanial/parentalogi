@@ -15,11 +15,6 @@ export default function Auth() {
     if (SuperTokens.canHandleRoute() === false) {
       redirectToAuth();
     }
-
-    // document.getElementById("supertokens-root").innerHTML = "Masuk";
-    // document.shadowRoot.querySelectorAll("monkey")[0].innerHTML =
-    //   "change by class";
-    // document.shadow;
   }, []);
 
   return (
@@ -29,7 +24,7 @@ export default function Auth() {
         <div className="container flex flex-col gap-4 ">
           <img
             className="w-[120px] m-auto"
-            src="/favicon.ico"
+            src="/favicon.svg"
             alt="Parentalogi"
           />
           <h1 className="text-[#3980BF] text-center font-semibold text-5xl font-asap">
