@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
-import Image from "next/image"
+import Image from "next/image";
 
 export default function Profil() {
   async function daftarClicked() {

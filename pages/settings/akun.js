@@ -32,7 +32,6 @@ export default function Akun() {
     e.preventDefault();
 
     const password = { oldPassword, newPassword };
-    console.log(password)
     fetch(`https://parentalogi.me/api/users/change-password`, {
       method: "PUT",
       headers: {
