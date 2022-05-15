@@ -95,40 +95,37 @@ export default function Profile() {
                   </div>
                   <div className="text-center mb-2 px-10">
                     <p className="text-3xl font-bold mb-2">
-                      M. Fahrio Ghanial F.
+                      { user.nama }
                     </p>
                     <p className="text-lg">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Quis massa enim diam aenean. Odio ultrices consectetur
-                      iaculis velit integer lacinia. Mi pellentesque nec sed
-                      viverra. Et integer ultrices duis facilisi natoque risus.
+                      { user.bio }
                     </p>
                   </div>
                   <div className="inline text-center mb-2 px-10">
                     <GoLocation className="inline" size="20px" />
-                    <a className="text-md ml-2 mb-2 mr-6">Bandung</a>
+                    <a className="text-md ml-2 mb-2 mr-6">{ user.domisili }</a>
                     <FaBirthdayCake className="inline" size="20px" />
                     <a className="text-md ml-2 mb-2 mr-6">
-                      Bergabung sejak 1 Januari 1970
+                      { user.tanggal_lahir }
                     </a>
                     <GiSuitcase className="inline" size="30px" />
                     <a className="text-md ml-2 mb-2 mr-6">
-                      Front-end Developer
+                      { user.pekerjaan }
                     </a>
                   </div>
                   <hr />
                   <div className="flex text-center px-10 justify-center">
                     <div className="text-lg w-24 h-14">
                       <p className="mb-1 font-bold">Post</p>
-                      <p className="underline">51</p>
+                      <p className="underline">20</p>
                     </div>
                     <div className="text-lg w-24 h-14">
-                      <p className="mb-1 font-bold">Post</p>
-                      <p className="underline">51</p>
+                      <p className="mb-1 font-bold">Mengikuti</p>
+                      <p className="underline">40</p>
                     </div>
                     <div className="text-lg w-24 h-14">
-                      <p className="mb-1 font-bold">Post</p>
-                      <p className="underline">51</p>
+                      <p className="mb-1 font-bold">Diikuti</p>
+                      <p className="underline">60</p>
                     </div>
                   </div>
                 </div>

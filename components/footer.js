@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer(props) {
   return (
     <>
@@ -8,7 +10,7 @@ export default function Footer(props) {
             <div className="w-full md:w-1/4">
               <img src="/favicon.svg" alt="parentalogi" className="w-24" />
               <div className="flex gap-x-2 mt-3 text-white">
-                <a href="">Tentang Kami</a>
+                <Link href="/about">Tentang Kami</Link>
               </div>
               <p className="text-white mt-4 text-sm md:visible invisible">
                 © 2022 Parentalogi. All rights reserved

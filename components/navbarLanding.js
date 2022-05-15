@@ -25,14 +25,14 @@ export default function NavbarLanding(props) {
       navMenu.classList.toggle("hidden");
     });
 
-    window.onscroll = function () {
-      const header = document.querySelector("header");
-      const fixedNav = header.offsetTop;
+    // window.onscroll = function () {
+    //   const header = document.querySelector("header");
+    //   const fixedNav = header.offsetTop;
 
-      if (window.pageYOffset > fixedNav) {
-        header.classList.add("navbar-landing-fixed");
-      } else header.classList.remove("navbar-landing-fixed");
-    };
+    //   if (window.pageYOffset > fixedNav) {
+    //     header.classList.add("navbar-landing-fixed");
+    //   } else header.classList.remove("navbar-landing-fixed");
+    // };
   }, []);
 
   return (
