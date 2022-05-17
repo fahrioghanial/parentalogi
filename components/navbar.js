@@ -7,6 +7,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 
 export default function Navbar() {
+  const [keyword, setKeyword] = useState("");
   const [user, setUser] = useState([]);
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
@@ -26,6 +27,10 @@ export default function Navbar() {
 
   const aboutClicked = () => {
     router.push("/about");
+  };
+
+  const settingsClicked = () => {
+    router.push("/settings/profil");
   };
 
   const profileClicked = () => {
@@ -50,12 +55,6 @@ export default function Navbar() {
       EmailPassword.redirectToAuth();
     });
   };
-
-  // async function logoutClicked() {
-  //   await signOut();
-  //   // router.push("/");
-  //   EmailPassword.redirectToAuth();
-  // }
 
   useEffect(() => {
     const profilePicture = document.querySelector("#profile-picture");
@@ -97,15 +96,6 @@ export default function Navbar() {
                   </div>
                 </a>
               </Link>
-              <form action="" className="invisible md:visible">
-                <input
-                  type="text"
-                  name="search-box"
-                  id="search-box"
-                  placeholder="Cari..."
-                  className="p-2 rounded-md md:w-80 w-0"
-                />
-              </form>
             </div>
             <div className="flex items-center px-4 ">
               <nav
@@ -155,7 +145,7 @@ export default function Navbar() {
                         <li className="group">
                           <button
                             className="text-white font-semibold py-4 mx-8 flex group-hover:text-[#9CA3AF]"
-                            // onClick={}
+                            onClick={settingsClicked}
                           >
                             Pengaturan
                           </button>

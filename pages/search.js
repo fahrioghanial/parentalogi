@@ -19,29 +19,37 @@ const EmailPasswordAuthNoSSR = dynamic(
   { ssr: false }
 );
 
-export async function getStaticProps() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/`);
-  const posts = await res.json();
-  return {
-    props: {
-      posts,
-    },
-    revalidate: 10,
-  };
-}
-
-export default function Dashboard({ posts }) {
+export default function Dashboard() {
   return (
     <EmailPasswordAuthNoSSR>
-      <DashboardPage posts={posts} />
+      <DashboardPage />
     </EmailPasswordAuthNoSSR>
   );
 }
 
-function DashboardPage({ posts }) {
+function DashboardPage() {
   const [user, setUser] = useState([]);
-  const [keyword, setKeyword] = useState("");
+  const [posts, setPosts] = useState([]);
+  const [newKeyword, setNewKeyword] = useState("");
   const router = useRouter();
+  const keyword = router.query.keyword;
+  // const passKeyword = keyword;
+  console.log("key", keyword);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts?q=${newKeyword}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPosts(data);
+        console.log("data ", data);
+      });
+    router.push({
+      pathname: "/search",
+      query: { keyword: newKeyword },
+    });
+  };
+
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
       credentials: "same-origin",
@@ -50,16 +58,13 @@ function DashboardPage({ posts }) {
       .then((data) => {
         setUser(data);
       });
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts?q=${keyword}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPosts(data);
+        console.log("data ", data);
+      });
   }, []);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-
-    router.push({
-      pathname: "/search",
-      query: { keyword: keyword },
-    });
-  };
 
   return (
     <>
@@ -71,14 +76,14 @@ function DashboardPage({ posts }) {
           <div className="flex flex-wrap">
             <div className="w-full self-center px-5 md:pl-10">
               <h1 className="font-semibold text-2xl md:text-4xl text-blue-700 mb-10">
-                Beranda
+                Cari Postingan
               </h1>
               <form onSubmit={handleSearch} className="my-10">
                 <div className="border-blue-400 border-2 rounded-full w-1/2">
                   <input
                     type="text"
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
+                    value={newKeyword}
+                    onChange={(e) => setNewKeyword(e.target.value)}
                     placeholder="Cari judul post..."
                     className="p-3 rounded-full w-full"
                   />
@@ -109,13 +114,12 @@ function DashboardPage({ posts }) {
                   >
                     <div className="py-8 px-6 bg-[#3980BF] text-white relative">
                       <div className="lg:flex lg:gap-x-4">
-                        <div className="rounded-full w-20 flex-none h-20 mb-2 bg-contain bg-center bg-no-repeat">
-                          <img
-                            src={`/dummyprofile.png`}
-                            className="rounded-full"
-                            alt=""
-                          />
-                        </div>
+                        <div
+                          className="bg-center rounded-full w-20 flex-none h-20 mb-2"
+                          style={{
+                            backgroundImage: `url("/dummyprofile.png")`,
+                          }}
+                        ></div>
                         <div className="flex flex-col">
                           <Link
                             href={{

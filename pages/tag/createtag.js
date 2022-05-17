@@ -61,7 +61,7 @@ function CreateTag() {
       <Navbar />
       {/* Create tag section */}
       <h1 className="pt-32 font-semibold text-2xl md:px-16 px-4">Buat Tag</h1>
-      <section id="create_post" className="pt-32 font-asap md:px-16">
+      <section id="create_post" className="pt-10 font-asap md:px-16">
         <form onSubmit={handleSubmit}>
           <div className="container">
             <div className="flex flex-wrap border-2 border-blue-500 p-10 rounded-lg gap-4">

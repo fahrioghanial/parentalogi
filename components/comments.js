@@ -75,7 +75,6 @@ export default function Comments({ comments, id_post, username, post_slug }) {
           .then((data) => {
             setAllComments(data);
           });
-        // router.reload(window.location.pathname);
       });
     }
   };
@@ -134,7 +133,7 @@ export default function Comments({ comments, id_post, username, post_slug }) {
                 <div
                   className="bg-contain bg-center bg-no-repeat rounded-full w-20 flex-none h-20 mb-2"
                   style={{
-                    backgroundImage: `url("https://api.himatif.org/data/assets/foto/2019/25.jpg")`,
+                    backgroundImage: `url("/dummyprofile.png")`,
                   }}
                 ></div>
                 <div className="w-full">
@@ -165,12 +164,9 @@ export default function Comments({ comments, id_post, username, post_slug }) {
               <div className="rounded-xl shadow-lg overflow-hidden mt-10">
                 <div className="py-8 px-6 relative flex flex-col">
                   <div className="lg:flex lg:gap-x-4">
-                    <div
-                      className="bg-contain bg-center bg-no-repeat rounded-full w-20 flex-none h-20 mb-2"
-                      // style={{
-                      //   backgroundImage: `url(${rootComment.img})`,
-                      // }}
-                    ></div>
+                    <div className="bg-center rounded-full w-20 flex-none h-20 mb-2">
+                      <img src={`/dummyprofile.png`} alt="" />
+                    </div>
                     <div>
                       <h3 className="font-medium">
                         {rootComment.data_penulis.nama}

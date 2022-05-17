@@ -14,22 +14,52 @@ import Link from "next/link";
 import moment from "moment";
 import "moment/locale/id";
 
+// export async function getStaticProps() {
+//   const res = await fetch(
+//     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/followed-users`
+//   );
+//   const followedUsers = await res.json();
+
+//   return {
+//     props: {
+//       followedUsers,
+//     },
+//     revalidate: 10,
+//   };
+// }
+
 export default function Profile() {
   async function daftarClicked() {
     redirectToAuth("signup");
   }
 
   const router = useRouter();
-  const data = router.query;
+  const dataUserFromQuery = router.query;
 
   const [user, setUser] = useState([]);
+  const [isFollow, setIsFollow] = useState(false);
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${data.userName}`, {
-      credentials: "same-origin",
-    })
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${dataUserFromQuery.userName}`,
+      {
+        credentials: "same-origin",
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         setUser(data);
+      });
+
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/followed-users`)
+      .then((res) => res.json())
+      .then((data) => {
+        {
+          data.map((d) => {
+            if (d.nama_pengguna == dataUserFromQuery.userName) {
+              setIsFollow(true);
+            }
+          });
+        }
       });
   }, []);
 
@@ -46,20 +76,41 @@ export default function Profile() {
     (allPosts) => allPosts.user.nama_pengguna == user.nama_pengguna
   );
 
-  const handleDeletePost = async (id_post) => {
-    var result = confirm("Hapus Postingan?");
-    if (result) {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${id_post}`, {
-        method: "DELETE",
+  const handleFollow = async (username) => {
+    if (isFollow) {
+      setIsFollow(false);
+    }
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${username}/follow`,
+      {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "same-origin",
-      }).then(() => {
-        console.log("post deleted");
+      }
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${username}`, {
+          credentials: "same-origin",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setUser(data);
+          });
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/followed-users`)
+          .then((res) => res.json())
+          .then((data) => {
+            {
+              data.map((d) => {
+                if (d.nama_pengguna == username) {
+                  setIsFollow(true);
+                }
+              });
+            }
+          });
       });
-      router.reload(window.location.pathname);
-    }
   };
 
   return (
@@ -83,53 +134,47 @@ export default function Profile() {
             <div className="w-full self-top md:w-4/5 px-5 ">
               <div className="rounded-xl shadow-lg overflow-hidden mb-10">
                 <div className="py-6 px-6 bg-[#3980BF] text-white flex flex-col gap-2 justify-center">
-                  <div className="inline">
-                    <div className="float-right ml-5 my-1">
-                      <a>
-                        {" "}
-                        <AiOutlineMenu size="30px" />{" "}
-                      </a>
-                    </div>
-                    <button className="invisible md:visible text-[#3980BF] font-semibold md:py-2 md:mx-2 flex hover:bg-black md:bg-white md:rounded-lg md:px-3 float-right">
-                      Ikuti
+                  <div className="m-auto">
+                    <button
+                      className={
+                        isFollow == true
+                          ? "text-white font-semibold py-2 hover:bg-red-900 bg-red-600 rounded-lg px-3"
+                          : "text-[#3980BF] font-semibold py-2 hover:bg-blue-800 hover:text-white bg-white rounded-lg px-3"
+                      }
+                      onClick={() => handleFollow(user.nama_pengguna)}
+                    >
+                      {isFollow == true ? "Berhenti Mengikuti" : "Ikuti"}
                     </button>
                   </div>
                   <div className="text-center mb-2 px-10">
-                    <p className="text-3xl font-bold mb-2">
-                      M. Fahrio Ghanial F.
-                    </p>
-                    <p className="text-lg">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Quis massa enim diam aenean. Odio ultrices consectetur
-                      iaculis velit integer lacinia. Mi pellentesque nec sed
-                      viverra. Et integer ultrices duis facilisi natoque risus.
-                    </p>
+                    <div></div>
+                    <p className="text-3xl font-bold mb-2">{user.nama}</p>
+                    <p className="text-lg mb-2">@{user.nama_pengguna}</p>
+                    <p className="text-lg">{user.bio}</p>
                   </div>
                   <div className="inline text-center mb-2 px-10">
                     <GoLocation className="inline" size="20px" />
-                    <a className="text-md ml-2 mb-2 mr-6">Bandung</a>
+                    <a className="text-md ml-2 mb-2 mr-6">{user.domisili}</a>
                     <FaBirthdayCake className="inline" size="20px" />
                     <a className="text-md ml-2 mb-2 mr-6">
-                      Bergabung sejak 1 Januari 1970
+                      {user.tanggal_lahir}
                     </a>
                     <GiSuitcase className="inline" size="30px" />
-                    <a className="text-md ml-2 mb-2 mr-6">
-                      Front-end Developer
-                    </a>
+                    <a className="text-md ml-2 mb-2 mr-6">{user.pekerjaan}</a>
                   </div>
                   <hr />
                   <div className="flex text-center px-10 justify-center">
                     <div className="text-lg w-24 h-14">
-                      <p className="mb-1 font-bold">Post</p>
-                      <p className="underline">51</p>
+                      <p className="mb-1 font-bold">Postingan</p>
+                      <p className="underline">{posts.length}</p>
                     </div>
                     <div className="text-lg w-24 h-14">
-                      <p className="mb-1 font-bold">Post</p>
-                      <p className="underline">51</p>
+                      <p className="mb-1 font-bold">Mengikuti</p>
+                      <p className="underline">{user.following}</p>
                     </div>
                     <div className="text-lg w-24 h-14">
-                      <p className="mb-1 font-bold">Post</p>
-                      <p className="underline">51</p>
+                      <p className="mb-1 font-bold">Diikuti</p>
+                      <p className="underline">{user.followedBy}</p>
                     </div>
                   </div>
                 </div>

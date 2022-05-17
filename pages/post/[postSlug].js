@@ -178,7 +178,12 @@ export default function Post({ post }) {
               <div className="rounded-b-xl shadow-lg overflow-hidden mb-10">
                 <div className="py-8 px-6 bg-[#3980BF] text-white">
                   <div className="lg:flex lg:gap-x-4">
-                    <div className="bg-[url('/test.png')] bg-center rounded-full w-20 flex-none h-20 mb-2"></div>
+                    <div
+                      className="bg-center rounded-full w-20 flex-none h-20 mb-2"
+                      style={{
+                        backgroundImage: `url("/dummyprofile.png")`,
+                      }}
+                    ></div>
                     <div>
                       <h3 className="font-medium">{post.user.nama}</h3>
                       <small>

@@ -31,23 +31,33 @@ function DashboardPage() {
   const router = useRouter();
   const data = router.query;
 
+  const namaTag = data.namaTag;
   const [tag, setTag] = useState([]);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts?tag=${data.namaTag}`
-    )
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts?tag=${namaTag}`)
       .then((res) => res.json())
       .then((data) => {
-        setTag(data[0].tags[0]);
         setPosts(data);
+      });
+
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tags`)
+      .then((res) => res.json())
+      .then((data) => {
+        {
+          data.map((d) => {
+            if (d.nama == namaTag) {
+              setTag(d);
+            }
+          });
+        }
       });
   }, []);
 
   return (
     <>
-      <HeadTitle />
+      <HeadTitle title={`${namaTag}`} />
       <Navbar />
       <div
         className="w-full pt-28"
@@ -89,7 +99,12 @@ function DashboardPage() {
                   >
                     <div className="py-8 px-6 bg-[#3980BF] text-white relative">
                       <div className="lg:flex lg:gap-x-4">
-                        <div className="bg-[url('/test.png')] bg-center rounded-full w-20 flex-none h-20 mb-2"></div>
+                        <div
+                          className="bg-center rounded-full w-20 flex-none h-20 mb-2"
+                          style={{
+                            backgroundImage: `url("/dummyprofile.png")`,
+                          }}
+                        ></div>
                         <div>
                           <h3 className="font-medium">{post.user.nama}</h3>
                           <small>

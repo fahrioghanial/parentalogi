@@ -79,23 +79,14 @@ export default function Home() {
       {/* Tag section start */}
       <section id="tag" className="pt-32 font-asap md:px-16">
         <div className="container">
-          <div className="flex flex-col md:flex-row mb-5 px-5 relative gap-3">
+          <div className="flex flex-col md:flex-row mb-5 px-5 gap-3 justify-between">
             <h1 className=" font-bold text-xl md:text-4xl">Tag Terpopuler</h1>
             <button
-              className="w-auto md:absolute md:right-80 text-white font-semibold py-2 mx-8 hover:bg-[#9CA3AF] bg-[#3980BF] rounded-lg px-3"
+              className="w-auto text-white font-semibold py-2 text-xl hover:bg-[#9CA3AF] bg-[#3980BF] rounded-lg px-3"
               onClick={createTagClicked}
             >
               Buat Tag
             </button>
-            <form action="" className="">
-              <input
-                type="text"
-                name="search-box"
-                id="search-box"
-                placeholder="Cari sebuah tag"
-                className="md:absolute md:right-0 p-2 rounded-md md:w-80 border-2 border-[#3980BF]"
-              />
-            </form>
           </div>
           <div className="flex flex-wrap">
             {tags.map((tag) => {

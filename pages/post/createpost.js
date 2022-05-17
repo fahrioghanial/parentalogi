@@ -175,14 +175,14 @@ function CreatePost() {
     <>
       <HeadTitle title="Create Post" />
       {/* Create post section */}
-      <section id="create_post" className="pt-32 font-asap md:px-16">
-        <header className="absolute top-0 left-0 w-full flex items-center z-10">
+      <section id="create_post" className="font-asap md:px-16">
+        <header className="absolute w-full flex items-center pt-14">
           <div className="container">
             <div className="flex items-center justify-between relative">
-              <div className="flex items-center px-4 md:px-16 mt-10">
+              <div className="flex items-center px-4 md:px-16">
                 <Link href="/dashboard">
                   <a>
-                    <div className="mr-8 flex-none hover:border-4 hover:border-blue-500 rounded-full">
+                    <div className="mr-8 flex-none hover:border-2 hover:border-blue-500 rounded-full">
                       <img src="/favicon.ico" alt="parentalogi" className="" />
                     </div>
                   </a>
@@ -196,7 +196,7 @@ function CreatePost() {
         </header>
 
         <form onSubmit={handleSubmit}>
-          <div className="container">
+          <div className="container pt-32">
             <div className="flex flex-wrap border-2 border-blue-500 p-10 rounded-lg gap-4 mb-20">
               <div className="w-full self-center">
                 <input
@@ -229,7 +229,7 @@ function CreatePost() {
                     })}
                   </select>
                   <span onClick={removeTag1}>
-                    <ImCross />
+                    <ImCross color="red" />
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -252,7 +252,7 @@ function CreatePost() {
                     })}
                   </select>
                   <span onClick={removeTag2}>
-                    <ImCross />
+                    <ImCross color="red" />
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -275,7 +275,7 @@ function CreatePost() {
                     })}
                   </select>
                   <span onClick={removeTag3}>
-                    <ImCross />
+                    <ImCross color="red" />
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -298,12 +298,17 @@ function CreatePost() {
                     })}
                   </select>
                   <span onClick={removeTag4}>
-                    <ImCross />
+                    <ImCross color="red" />
                   </span>
                 </div>
               </div>
               <div className="w-full self-center">
-                <input type="file" onChange={(e) => uploadImage(e)} />
+                <h1>Unggah Cover </h1>
+                <input
+                  type="file"
+                  className="p-2 rounded-md mb-3 border-2"
+                  onChange={(e) => uploadImage(e)}
+                />
                 <img src={baseImage} alt="cover" />
               </div>
               <div className="w-full self-center">
