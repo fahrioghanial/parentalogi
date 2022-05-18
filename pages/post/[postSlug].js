@@ -15,6 +15,8 @@ import moment from "moment";
 import "moment/locale/id";
 import Comments from "../../components/comments";
 import parse from "html-react-parser";
+import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
+import dynamic from "next/dynamic";
 
 export async function getStaticPaths() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/`);
@@ -46,7 +48,20 @@ export async function getStaticProps(context) {
   };
 }
 
-export default function Post({ post }) {
+const EmailPasswordAuthNoSSR = dynamic(
+  new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
+  { ssr: false }
+);
+
+export default function PostProtected({ post }) {
+  return (
+    <EmailPasswordAuthNoSSR>
+      <Post post={post} />
+    </EmailPasswordAuthNoSSR>
+  );
+}
+
+function Post({ post }) {
   async function daftarClicked() {
     redirectToAuth("signup");
   }

@@ -6,8 +6,23 @@ import { useEffect, useState } from "react";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
 import Link from "next/link";
+import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
+import dynamic from "next/dynamic";
 
-export default function Home() {
+const EmailPasswordAuthNoSSR = dynamic(
+  new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
+  { ssr: false }
+);
+
+export default function TagProtected() {
+  return (
+    <EmailPasswordAuthNoSSR>
+      <Tag />
+    </EmailPasswordAuthNoSSR>
+  );
+}
+
+function Tag() {
   const router = useRouter();
 
   const createTagClicked = () => {

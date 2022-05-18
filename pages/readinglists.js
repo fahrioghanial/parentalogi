@@ -18,27 +18,6 @@ const EmailPasswordAuthNoSSR = dynamic(
   { ssr: false }
 );
 
-// export async function getServerSideProps(context) {
-//   // this runs on the backend, so we must call init on supertokens-node SDK
-//   supertokensNode.init(backendConfig());
-//   let session;
-//   try {
-//     session = await Session.getSession(context.req, context.res);
-//   } catch (err) {
-//     if (err.type === Session.Error.TRY_REFRESH_TOKEN) {
-//       return { props: { fromSupertokens: "needs-refresh" } };
-//     } else if (err.type === Session.Error.UNAUTHORISED) {
-//       return { props: {} };
-//     } else {
-//       throw err;
-//     }
-//   }
-
-//   return {
-//     props: { userId: session.getUserId() },
-//   };
-// }
-
 export async function getStaticProps() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/`);
   const posts = await res.json();

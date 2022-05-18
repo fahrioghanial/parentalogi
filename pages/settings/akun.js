@@ -6,8 +6,23 @@ import Link from "next/link";
 import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
 import Image from "next/image";
+import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
+import dynamic from "next/dynamic";
 
-export default function Akun() {
+const EmailPasswordAuthNoSSR = dynamic(
+  new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
+  { ssr: false }
+);
+
+export default function AkunProtected() {
+  return (
+    <EmailPasswordAuthNoSSR>
+      <Akun />
+    </EmailPasswordAuthNoSSR>
+  );
+}
+
+function Akun() {
   async function daftarClicked() {
     redirectToAuth("signup");
   }
@@ -17,6 +32,8 @@ export default function Akun() {
   const [nama_pengguna, setNamaPengguna] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
+  const [isSame, setIsSame] = useState(false);
 
   useEffect(() => {
     fetch("https://parentalogi.me/api/users/profile", {
@@ -31,17 +48,22 @@ export default function Akun() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const password = { oldPassword, newPassword };
-    fetch(`https://parentalogi.me/api/users/change-password`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "same-origin",
-      body: JSON.stringify(password),
-    }).then(() => {
-      console.log("Password Changed");
-    });
+    if (newPasswordConfirm != newPassword) {
+      alert("Konfirmasi kata sandi tidak sesuai!");
+    } else {
+      const password = { oldPassword, newPassword };
+      fetch(`https://parentalogi.me/api/users/change-password`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+        body: JSON.stringify(password),
+      }).then((response) => {
+        console.log("Password Changed");
+        console.log(response.message);
+      });
+    }
   };
 
   return (
@@ -99,8 +121,15 @@ export default function Akun() {
                     </p>
                     <input
                       type="password"
+                      value={newPasswordConfirm}
+                      onChange={(e) => setNewPasswordConfirm(e.target.value)}
                       className="p-2 rounded-md w-full text-black"
                     />
+                    <p className="text-red-200 font-semibold">
+                      {newPasswordConfirm != newPassword
+                        ? "Masukkan konfirmasi kata sandi baru yang sesuai!"
+                        : ""}
+                    </p>
                     <button
                       className="border-blue-500 w-2/5 mt-2 border-2 rounded-lg py-2 px-4 font-bold bg-white bold text-[#3980BF]"
                       type="submit"

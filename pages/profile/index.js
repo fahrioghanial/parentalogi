@@ -13,8 +13,23 @@ import { GiSuitcase } from "react-icons/gi";
 import Link from "next/link";
 import moment from "moment";
 import "moment/locale/id";
+import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
+import dynamic from "next/dynamic";
 
-export default function Profile() {
+const EmailPasswordAuthNoSSR = dynamic(
+  new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
+  { ssr: false }
+);
+
+export default function ProfileProtected() {
+  return (
+    <EmailPasswordAuthNoSSR>
+      <Profile />
+    </EmailPasswordAuthNoSSR>
+  );
+}
+
+function Profile() {
   async function daftarClicked() {
     redirectToAuth("signup");
   }

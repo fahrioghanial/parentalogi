@@ -7,8 +7,23 @@ import Footer from "../../components/footer";
 import Navbar from "../../components/navbar";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
+import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
+import dynamic from "next/dynamic";
 
-export default function Profil() {
+const EmailPasswordAuthNoSSR = dynamic(
+  new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
+  { ssr: false }
+);
+
+export default function ProfilProtected() {
+  return (
+    <EmailPasswordAuthNoSSR>
+      <Profil />
+    </EmailPasswordAuthNoSSR>
+  );
+}
+
+function Profil() {
   async function daftarClicked() {
     redirectToAuth("signup");
   }

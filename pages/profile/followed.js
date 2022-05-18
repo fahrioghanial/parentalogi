@@ -14,7 +14,23 @@ import Link from "next/link";
 import moment from "moment";
 import "moment/locale/id";
 
-export default function Profile() {
+import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
+import dynamic from "next/dynamic";
+
+const EmailPasswordAuthNoSSR = dynamic(
+  new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
+  { ssr: false }
+);
+
+export default function ProfileProtected() {
+  return (
+    <EmailPasswordAuthNoSSR>
+      <Profile />
+    </EmailPasswordAuthNoSSR>
+  );
+}
+
+function Profile() {
   async function daftarClicked() {
     redirectToAuth("signup");
   }
