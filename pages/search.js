@@ -1,13 +1,13 @@
 import React from "react";
-import styles from "../../styles/Home.module.css";
+import styles from "../styles/Home.module.css";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
 import supertokensNode from "supertokens-node";
-import { backendConfig } from "../../config/backendConfig";
+import { backendConfig } from "../config/backendConfig";
 import Session from "supertokens-node/recipe/session";
-import HeadTitle from "../../components/headTitle";
-import Navbar from "../../components/navbar";
-import Footer from "../../components/footer";
+import HeadTitle from "../components/headTitle";
+import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import moment from "moment";
@@ -28,52 +28,67 @@ export default function Dashboard() {
 }
 
 function DashboardPage() {
-  const router = useRouter();
-  const data = router.query;
-
-  const namaTag = data.namaTag;
-  const [tag, setTag] = useState([]);
+  const [user, setUser] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [newKeyword, setNewKeyword] = useState("");
+  const router = useRouter();
+  const keyword = router.query.keyword;
+  // const passKeyword = keyword;
+  console.log("key", keyword);
 
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts?tag=${namaTag}`)
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts?q=${newKeyword}`)
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);
+        console.log("data ", data);
       });
+    router.push({
+      pathname: "/search",
+      query: { keyword: newKeyword },
+    });
+  };
 
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tags`)
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
+      credentials: "same-origin",
+    })
       .then((res) => res.json())
       .then((data) => {
-        {
-          data.map((d) => {
-            if (d.nama == namaTag) {
-              setTag(d);
-            }
-          });
-        }
+        setUser(data);
+      });
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts?q=${keyword}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPosts(data);
+        console.log("data ", data);
       });
   }, []);
 
   return (
     <>
-      <HeadTitle title={`${namaTag}`} />
+      <HeadTitle />
       <Navbar />
-      <div
-        className="w-full pt-28"
-        style={{
-          backgroundColor: `${tag.warna}`,
-        }}
-      ></div>
-      <h1 className="px-5 md:pl-10 mt-10 font-bold text-xl md:text-3xl">
-        Tag: {tag.nama}
-      </h1>
-      <h1 className="px-5 md:pl-10 text-lg md:text-2xl">{tag.deskripsi}</h1>
       {/* Dashboard section start */}
-      <section id="dashboard" className="pt-12 font-asap ">
+      <section id="dashboard" className="pt-24 font-asap ">
         <div className="container">
           <div className="flex flex-wrap">
             <div className="w-full self-center px-5 md:pl-10">
+              <h1 className="font-semibold text-2xl md:text-4xl text-blue-700 mb-10">
+                Cari Postingan
+              </h1>
+              <form onSubmit={handleSearch} className="my-10">
+                <div className="border-blue-400 border-2 rounded-full w-1/2">
+                  <input
+                    type="text"
+                    value={newKeyword}
+                    onChange={(e) => setNewKeyword(e.target.value)}
+                    placeholder="Cari judul post..."
+                    className="p-3 rounded-full w-full"
+                  />
+                </div>
+              </form>
               <div className="flex flex-col md:flex-row mb-5 gap-5 md:gap-10 font-semibold text-xl md:text-3xl">
                 <Link href={`/dashboard`}>
                   <a className="hover:text-blue-500">Beranda</a>
@@ -105,8 +120,20 @@ function DashboardPage() {
                             backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${post.user.foto_profil})`,
                           }}
                         ></div>
-                        <div>
-                          <h3 className="font-medium">{post.user.nama}</h3>
+                        <div className="flex flex-col">
+                          <Link
+                            href={{
+                              pathname: `/profile/${
+                                post.user.nama_pengguna == user.nama_pengguna
+                                  ? ""
+                                  : post.user.nama_pengguna
+                              }`,
+                            }}
+                          >
+                            <a className="hover:text-black font-medium">
+                              {post.user.nama}
+                            </a>
+                          </Link>
                           <small>
                             {moment(post.createdAt).format("LLL")}
                             {/* ({moment(post.createdAt).fromNow()}) */}
@@ -122,7 +149,7 @@ function DashboardPage() {
                                 pathname: `/post/${post.slug}`,
                               }}
                             >
-                              <a className="font-bold text-base md:text-2xl hover:text-black">
+                              <a className="font-bold text-base my-2 md:text-2xl hover:text-black">
                                 {post.judul}
                               </a>
                             </Link>
@@ -162,12 +189,12 @@ function DashboardPage() {
                                 <small>{post.jumlah_disukai} Disukai </small>
                               </div>
                             </div>
-                            {/* <a
-                              href=""
-                              className="md:right-10 md:bottom-10 md:absolute bg-white rounded-xl text-[#3980BF] py-2 px-3 font-semibold mx-auto"
+
+                            {/* <button
+                              className="md:right-10 md:bottom-10 md:absolute bg-white rounded-xl text-[#3980BF] py-2 px-3 font-semibold mx-auto hover:bg-blue-800 hover:text-white"
                             >
                               Simpan
-                            </a> */}
+                            </button> */}
                           </div>
                         </div>
                       </div>

@@ -17,6 +17,17 @@ export default function Comments({ comments, id_post, username, post_slug }) {
   const [orangtua, setOrangtua] = useState(0);
   const [allComments, setAllComments] = useState([]);
 
+  const [user, setUser] = useState([]);
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data);
+      });
+  }, []);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -75,7 +86,6 @@ export default function Comments({ comments, id_post, username, post_slug }) {
           .then((data) => {
             setAllComments(data);
           });
-        // router.reload(window.location.pathname);
       });
     }
   };
@@ -108,12 +118,6 @@ export default function Comments({ comments, id_post, username, post_slug }) {
       });
   };
 
-  // const replyForm = useRef(null);
-
-  // function showReplyForm() {
-  //   replyForm.current.classList.remove("hidden");
-  // }
-
   return (
     <>
       <HeadTitle />
@@ -132,9 +136,9 @@ export default function Comments({ comments, id_post, username, post_slug }) {
             <div className="py-8 px-6">
               <div className="lg:flex lg:gap-x-4">
                 <div
-                  className="bg-contain bg-center bg-no-repeat rounded-full w-20 flex-none h-20 mb-2"
+                  className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
                   style={{
-                    backgroundImage: `url("https://api.himatif.org/data/assets/foto/2019/25.jpg")`,
+                    backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user.foto_profil})`,
                   }}
                 ></div>
                 <div className="w-full">
@@ -166,10 +170,10 @@ export default function Comments({ comments, id_post, username, post_slug }) {
                 <div className="py-8 px-6 relative flex flex-col">
                   <div className="lg:flex lg:gap-x-4">
                     <div
-                      className="bg-contain bg-center bg-no-repeat rounded-full w-20 flex-none h-20 mb-2"
-                      // style={{
-                      //   backgroundImage: `url(${rootComment.img})`,
-                      // }}
+                      className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
+                      style={{
+                        backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${rootComment.data_penulis.foto_profil})`,
+                      }}
                     ></div>
                     <div>
                       <h3 className="font-medium">
@@ -241,10 +245,10 @@ export default function Comments({ comments, id_post, username, post_slug }) {
                         <div className="py-8 px-6 relative flex flex-col">
                           <div className="lg:flex lg:gap-x-4">
                             <div
-                              className="bg-contain bg-center bg-no-repeat rounded-full w-20 flex-none h-20 mb-2"
-                              // style={{
-                              //   backgroundImage: `url(${replyComment.img})`,
-                              // }}
+                              className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
+                              style={{
+                                backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${replyComment.data_penulis.foto_profil})`,
+                              }}
                             ></div>
                             <div>
                               <h3 className="font-medium">

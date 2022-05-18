@@ -4,8 +4,36 @@ import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import Footer from "../components/footer";
 import NavbarLanding from "../components/navbarLanding";
+import { useEffect, useRef, useState } from "react";
+import moment from "moment";
+import "moment/locale/id";
 
-export default function Home() {
+export async function getStaticProps() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/`);
+  const allPosts = await res.json();
+
+  var largest = allPosts[0].jumlah_disukai;
+  for (var i = 0; i < allPosts.length; i++) {
+    if (largest < allPosts[i].jumlah_disukai) {
+      largest = allPosts[i].jumlah_disukai;
+    }
+  }
+
+  const featuredPostRaw = allPosts.filter(
+    (allPosts) => allPosts.jumlah_disukai == largest
+  );
+
+  const featuredPost = featuredPostRaw[0];
+
+  return {
+    props: {
+      featuredPost,
+    },
+    revalidate: 10,
+  };
+}
+
+export default function Home({ featuredPost }) {
   async function daftarClicked() {
     redirectToAuth("signup");
   }
@@ -13,6 +41,17 @@ export default function Home() {
   async function masukClicked() {
     redirectToAuth("signin");
   }
+
+  const [user, setUser] = useState([]);
+  useEffect(() => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${featuredPost.user.nama_pengguna}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data);
+      });
+  }, []);
 
   return (
     <>
@@ -133,23 +172,39 @@ export default function Home() {
               Postingan Unggulan
             </h1>
             <div className="w-full px-4">
-              <div className="rounded-t-xl shadow-lg overflow-hidden h-72 bg-[url('/test.png')]"></div>
+              <div className="rounded-t-xl shadow-lg overflow-hidden">
+                <img
+                  src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cover/${featuredPost.foto_cover}`}
+                  alt=""
+                  className="w-full"
+                />
+              </div>
               <div className="rounded-b-xl shadow-lg overflow-hidden mb-10">
                 <div className="py-8 px-6 bg-[#3980BF] text-white">
                   <div className="lg:flex lg:gap-x-4">
-                    <div className="bg-[url('/test.png')] bg-center rounded-full w-20 flex-none h-20 mb-2"></div>
+                    <div
+                      className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
+                      style={{
+                        backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user.foto_profil})`,
+                      }}
+                    ></div>
                     <div>
-                      <h3 className="font-medium">Jane Doe</h3>
-                      <small>20 Januari 2021</small>
+                      <h3 className="font-medium">{featuredPost.user.nama}</h3>
+                      <small>
+                        {moment(featuredPost.createdAt).format("LLL")}
+                        {featuredPost.telah_diubah
+                          ? " (Diubah pada " +
+                            moment(featuredPost.updatedAt).format("ll") +
+                            ")"
+                          : ""}
+                      </small>
                       <h1 className="font-bold text-base my-2 md:text-2xl">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Dolor dicta doloribus reiciendis exercitationem
-                        assumenda fuga tempore corporis architecto
+                        {featuredPost.judul}
                       </h1>
                       <div className="flex gap-x-1 mb-4 ">
-                        <a href="">#umum</a>
-                        <a href="">#anak</a>
-                        <a href="">#rumahtangga</a>
+                        {featuredPost.tags.map((tag) => {
+                          return <a key={tag.id}>#{tag.nama}</a>;
+                        })}
                       </div>
 
                       <div className="flex flex-col relative">
@@ -167,31 +222,11 @@ export default function Home() {
                                 fill="white"
                               />
                             </svg>
-                            <small>100 Reaksi </small>
-                          </div>
-                          <div className="flex gap-x-2">
-                            <svg
-                              width="26"
-                              height="25"
-                              viewBox="0 0 26 25"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M6.01375 18.5625H21.4375C21.9348 18.5625 22.4117 18.365 22.7633 18.0133C23.115 17.6617 23.3125 17.1848 23.3125 16.6875V4.5C23.3125 4.00272 23.115 3.52581 22.7633 3.17417C22.4117 2.82254 21.9348 2.625 21.4375 2.625H4.5625C4.06522 2.625 3.58831 2.82254 3.23667 3.17417C2.88504 3.52581 2.6875 4.00272 2.6875 4.5V21.225L6.01375 18.5625ZM6.67188 20.4375L2.335 23.9062C2.19715 24.0163 2.03104 24.0853 1.85575 24.1052C1.68047 24.1251 1.50313 24.0951 1.34411 24.0187C1.18509 23.9424 1.05085 23.8227 0.95681 23.6734C0.862771 23.5242 0.812751 23.3514 0.8125 23.175V4.5C0.8125 3.50544 1.20759 2.55161 1.91085 1.84835C2.61411 1.14509 3.56794 0.75 4.5625 0.75H21.4375C22.4321 0.75 23.3859 1.14509 24.0891 1.84835C24.7924 2.55161 25.1875 3.50544 25.1875 4.5V16.6875C25.1875 17.6821 24.7924 18.6359 24.0891 19.3391C23.3859 20.0424 22.4321 20.4375 21.4375 20.4375H6.67188Z"
-                                fill="white"
-                              />
-                            </svg>
-
-                            <small>10 Komentar</small>
+                            <small>
+                              {featuredPost.jumlah_disukai} Disukai{" "}
+                            </small>
                           </div>
                         </div>
-                        {/* <a
-                          href="#"
-                          className="md:right-0 md:bottom-0 md:absolute md:m-0 bg-white rounded-xl text-[#3980BF] py-2 px-3 font-semibold mx-auto"
-                        >
-                          Simpan
-                        </a> */}
                       </div>
                     </div>
                   </div>

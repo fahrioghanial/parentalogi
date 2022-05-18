@@ -13,8 +13,23 @@ import { GiSuitcase } from "react-icons/gi";
 import Link from "next/link";
 import moment from "moment";
 import "moment/locale/id";
+import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
+import dynamic from "next/dynamic";
 
-export default function Profile() {
+const EmailPasswordAuthNoSSR = dynamic(
+  new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
+  { ssr: false }
+);
+
+export default function ProfileProtected() {
+  return (
+    <EmailPasswordAuthNoSSR>
+      <Profile />
+    </EmailPasswordAuthNoSSR>
+  );
+}
+
+function Profile() {
   async function daftarClicked() {
     redirectToAuth("signup");
   }
@@ -56,8 +71,16 @@ export default function Profile() {
         credentials: "same-origin",
       }).then(() => {
         console.log("post deleted");
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts`)
+          .then((res) => res.json())
+          .then((data) => {
+            setAllPosts(data);
+            const posts = allPosts.filter(
+              (allPosts) => allPosts.user.nama_pengguna == user.nama_pengguna
+            );
+          });
       });
-      router.reload(window.location.pathname);
+      // router.reload(window.location.pathname);
     }
   };
 
@@ -70,10 +93,10 @@ export default function Profile() {
       <section id="profile" className="pt-32 font-asap bg-white">
         <div className="container">
           <div className="flex flex-wrap justify-center mb-4">
-            <Image
-              src="/dummy.png"
+            <img
+              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user.foto_profil}`}
               alt="parentalogi"
-              className="py-2 md:p-0"
+              className="rounded-full"
               width="150px"
               height="150px"
             />
@@ -82,50 +105,42 @@ export default function Profile() {
             <div className="w-full self-top md:w-4/5 px-5 ">
               <div className="rounded-xl shadow-lg overflow-hidden mb-10">
                 <div className="py-6 px-6 bg-[#3980BF] text-white flex flex-col gap-2 justify-center">
-                  <div className="inline">
-                    <div className="float-right ml-5 my-1">
-                      <a>
-                        {" "}
-                        <AiOutlineMenu size="30px" />{" "}
-                      </a>
-                    </div>
-                    <button className="invisible md:visible text-[#3980BF] font-semibold md:py-2 md:mx-2 flex hover:bg-black md:bg-white md:rounded-lg md:px-3 float-right">
-                      Ikuti
-                    </button>
-                  </div>
                   <div className="text-center mb-2 px-10">
-                    <p className="text-3xl font-bold mb-2">
-                      { user.nama }
-                    </p>
-                    <p className="text-lg">
-                      { user.bio }
-                    </p>
+                    <p className="text-3xl font-bold mb-2">{user.nama}</p>
+                    <p className="text-lg mb-2">@{user.nama_pengguna}</p>
+                    <p className="text-lg">{user.bio}</p>
                   </div>
                   <div className="inline text-center mb-2 px-10">
                     <GoLocation className="inline" size="20px" />
-                    <a className="text-md ml-2 mb-2 mr-6">{ user.domisili }</a>
+                    <a className="text-md ml-2 mb-2 mr-6">{user.domisili}</a>
                     <FaBirthdayCake className="inline" size="20px" />
                     <a className="text-md ml-2 mb-2 mr-6">
-                      { user.tanggal_lahir }
+                      {user.tanggal_lahir}
                     </a>
                     <GiSuitcase className="inline" size="30px" />
-                    <a className="text-md ml-2 mb-2 mr-6">
-                      { user.pekerjaan }
-                    </a>
+                    <a className="text-md ml-2 mb-2 mr-6">{user.pekerjaan}</a>
                   </div>
                   <hr />
                   <div className="flex text-center px-10 justify-center">
                     <div className="text-lg w-24 h-14">
-                      <p className="mb-1 font-bold">Post</p>
-                      <p className="underline">20</p>
+                      <p className="mb-1 font-bold">Postingan</p>
+                      <p className="underline">{posts.length}</p>
                     </div>
                     <div className="text-lg w-24 h-14">
                       <p className="mb-1 font-bold">Mengikuti</p>
-                      <p className="underline">40</p>
+                      <Link
+                        href={{
+                          pathname: `/profile/followed`,
+                        }}
+                      >
+                        <a className="underline hover:text-black">
+                          {user.following}
+                        </a>
+                      </Link>
                     </div>
                     <div className="text-lg w-24 h-14">
                       <p className="mb-1 font-bold">Diikuti</p>
-                      <p className="underline">60</p>
+                      <p className="underline">{user.followedBy}</p>
                     </div>
                   </div>
                 </div>
@@ -142,7 +157,12 @@ export default function Profile() {
                 >
                   <div className="py-8 px-6 bg-[#3980BF] text-white relative">
                     <div className="lg:flex lg:gap-x-4">
-                      <div className="bg-[url('/test.png')] bg-center rounded-full w-20 flex-none h-20 mb-2"></div>
+                      <div
+                        className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
+                        style={{
+                          backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user.foto_profil})`,
+                        }}
+                      ></div>
                       <div>
                         <h3 className="font-medium">{post.user.nama}</h3>
                         <small>
@@ -168,9 +188,14 @@ export default function Profile() {
                         <div className="flex gap-x-1 mb-4 ">
                           {post.tags.map((tag) => {
                             return (
-                              <a href="" key={tag.id}>
-                                #{tag.nama}
-                              </a>
+                              <Link
+                                href={{
+                                  pathname: `/tag/${tag.nama}`,
+                                }}
+                                key={tag.id}
+                              >
+                                <a className="hover:text-black">#{tag.nama}</a>
+                              </Link>
                             );
                           })}
                         </div>

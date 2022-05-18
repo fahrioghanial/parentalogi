@@ -15,6 +15,8 @@ import moment from "moment";
 import "moment/locale/id";
 import Comments from "../../components/comments";
 import parse from "html-react-parser";
+import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
+import dynamic from "next/dynamic";
 
 export async function getStaticPaths() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/`);
@@ -46,7 +48,20 @@ export async function getStaticProps(context) {
   };
 }
 
-export default function Post({ post }) {
+const EmailPasswordAuthNoSSR = dynamic(
+  new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
+  { ssr: false }
+);
+
+export default function PostProtected({ post }) {
+  return (
+    <EmailPasswordAuthNoSSR>
+      <Post post={post} />
+    </EmailPasswordAuthNoSSR>
+  );
+}
+
+function Post({ post }) {
   async function daftarClicked() {
     redirectToAuth("signup");
   }
@@ -178,7 +193,12 @@ export default function Post({ post }) {
               <div className="rounded-b-xl shadow-lg overflow-hidden mb-10">
                 <div className="py-8 px-6 bg-[#3980BF] text-white">
                   <div className="lg:flex lg:gap-x-4">
-                    <div className="bg-[url('/test.png')] bg-center rounded-full w-20 flex-none h-20 mb-2"></div>
+                    <div
+                      className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
+                      style={{
+                        backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user.foto_profil})`,
+                      }}
+                    ></div>
                     <div>
                       <h3 className="font-medium">{post.user.nama}</h3>
                       <small>

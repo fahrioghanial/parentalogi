@@ -1,6 +1,7 @@
 import EmailPasswordReact from "supertokens-auth-react/recipe/emailpassword";
 import SessionReact from "supertokens-auth-react/recipe/session";
 import { appInfo } from "./appInfo";
+import { useEffect, useState } from "react";
 
 export let frontendConfig = () => {
   return {
@@ -19,7 +20,7 @@ export let frontendConfig = () => {
         },
         palette: {
           background: "#3980BF",
-          error: "#FF0000",
+          error: "#ff5774",
           textTitle: "#FFFFFF",
           textLabel: "#FFFFFF",
           textInput: "#000000",
@@ -33,6 +34,7 @@ export let frontendConfig = () => {
         style: {
           container: {
             fontFamily: "Asap, sans-serif",
+            fontWeight: "bold",
           },
         },
         signInAndUpFeature: {
@@ -42,6 +44,15 @@ export let frontendConfig = () => {
                 id: "nama_pengguna",
                 label: "Nama Pengguna",
                 placeholder: "Nama Pengguna",
+
+                // validate: async (value) => {
+                //   console.log("checkusername:", CheckUsername(value));
+                //   console.log("value:", value);
+                //   if (value == CheckUsername(value)) {
+                //     return "Username already used";
+                //   }
+                //   return undefined;
+                // },
               },
               {
                 id: "nama",

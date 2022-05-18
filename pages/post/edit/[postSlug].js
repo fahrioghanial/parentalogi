@@ -34,13 +34,15 @@ function CreatePost() {
   const [data, setData] = useState("");
   const [postContent, setPostContent] = useState("");
   const [postCover, setPostCover] = useState("");
+  const [postCoverOld, setPostCoverOld] = useState("");
   const [postTitle, setPostTitle] = useState("");
   const [tags, setTags] = useState([]);
+  const [oldTags, setOldTags] = useState([]);
 
-  const [tag1, setTag1] = useState();
-  const [tag2, setTag2] = useState();
-  const [tag3, setTag3] = useState();
-  const [tag4, setTag4] = useState();
+  let tag1 = null;
+  let tag2 = null;
+  let tag3 = null;
+  let tag4 = null;
 
   const [tagsExist, setTagsExist] = useState([]);
   useEffect(() => {
@@ -76,19 +78,19 @@ function CreatePost() {
   const selectTag4 = useRef(null);
 
   function removeTag1() {
-    setTag1();
+    tag1 = null;
     selectTag1.current.selectedIndex = -1;
   }
   function removeTag2() {
-    setTag2();
+    tag2 = null;
     selectTag2.current.selectedIndex = -1;
   }
   function removeTag3() {
-    setTag3();
+    tag3 = null;
     selectTag3.current.selectedIndex = -1;
   }
   function removeTag4() {
-    setTag4();
+    tag4 = null;
     selectTag4.current.selectedIndex = -1;
   }
 
@@ -102,26 +104,58 @@ function CreatePost() {
       .then((res) => res.json())
       .then((data) => {
         setPostContent(data.isi_text);
-        setPostCover(data.foto_cover);
+        setPostCoverOld(data.foto_cover);
         setPostTitle(data.judul);
-        setTags(data.tags);
+        {
+          data.tags.map((t) => {
+            setOldTags((oldArray) => [...oldArray, t.id]);
+          });
+        }
       });
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const post = { postTitle, tags, postContent, postCover };
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${temp.postSlug}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "same-origin",
-      body: JSON.stringify(post),
-    }).then(() => {
-      console.log("post edited");
-      router.back();
-    });
+    if (postCover == "") {
+      convertFromUrlToBase64String(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cover/${postCoverOld}`,
+        function (dataUrl) {
+          console.log("RESULT:", dataUrl);
+          let postCover = dataUrl;
+          const post = { postTitle, tags, postContent, postCover };
+          fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${temp.postSlug}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: "same-origin",
+              body: JSON.stringify(post),
+            }
+          ).then(() => {
+            console.log("post edited");
+            router.back();
+          });
+        }
+      );
+    } else {
+      const post = { postTitle, tags, postContent, postCover };
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${temp.postSlug}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "same-origin",
+          body: JSON.stringify(post),
+        }
+      ).then(() => {
+        console.log("post edited");
+        router.back();
+      });
+    }
   };
 
   const [baseImage, setBaseImage] = useState("");
@@ -184,18 +218,32 @@ function CreatePost() {
     });
   };
 
+  function convertFromUrlToBase64String(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        callback(reader.result.replace("data:", "").replace(/^.+,/, ""));
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  }
+
   return (
     <>
-      <HeadTitle title="Create Post" />
-      {/* Create post section */}
-      <section id="create_post" className="pt-32 font-asap md:px-16">
-        <header className="absolute top-0 left-0 w-full flex items-center z-10">
+      <HeadTitle title="Edit post" />
+      {/* Edit post section */}
+      <section id="create_post" className="font-asap md:px-16">
+        <header className="absolute w-full pt-14 flex items-center">
           <div className="container">
             <div className="flex items-center justify-between relative">
               <div className="flex items-center px-4 md:px-16 ">
                 <Link href="/dashboard">
                   <a>
-                    <div className="mr-8 flex-none">
+                    <div className="mr-8 flex-none hover:border-2 hover:border-blue-600 rounded-full">
                       <img src="/favicon.ico" alt="parentalogi" className="" />
                     </div>
                   </a>
@@ -207,7 +255,7 @@ function CreatePost() {
         </header>
 
         <form onSubmit={handleSubmit}>
-          <div className="container">
+          <div className="container pt-32">
             <div className="flex flex-wrap border-2 border-blue-500 p-10 rounded-lg gap-4">
               <div className="w-full self-center">
                 <input
@@ -222,17 +270,28 @@ function CreatePost() {
                 <h1>Pilih Tags </h1>
                 <div className="flex gap-2">
                   <select
-                    onChange={(e) => setTag1(e.target.value)}
+                    onChange={(e) => (tag1 = e.target.value)}
                     ref={selectTag1}
                   >
-                    <option disabled selected value>
+                    <option
+                      disabled
+                      selected={oldTags.length > 0 ? false : true}
+                    >
                       -- pilih tag pertama --
                     </option>
 
                     {tagsExist.map((tag) => {
+                      if (oldTags[0] == tag.id) {
+                        tag1 = oldTags[0];
+                      }
+
                       return (
                         <>
-                          <option value={tag.id} key={tag.id}>
+                          <option
+                            value={tag.id}
+                            selected={oldTags[0] == tag.id ? true : false}
+                            key={tag.id}
+                          >
                             {tag.nama}
                           </option>
                         </>
@@ -240,22 +299,32 @@ function CreatePost() {
                     })}
                   </select>
                   <span onClick={removeTag1}>
-                    <ImCross />
+                    <ImCross color="red" />
                   </span>
                 </div>
                 <div className="flex gap-2">
                   <select
-                    onChange={(e) => setTag2(e.target.value)}
+                    onChange={(e) => (tag2 = e.target.value)}
                     ref={selectTag2}
                   >
-                    <option disabled selected value>
+                    <option
+                      disabled
+                      selected={oldTags.length > 1 ? false : true}
+                    >
                       -- pilih tag kedua --
                     </option>
 
                     {tagsExist.map((tag) => {
+                      if (oldTags[1] == tag.id) {
+                        tag2 = oldTags[1];
+                      }
                       return (
                         <>
-                          <option value={tag.id} key={tag.id}>
+                          <option
+                            value={tag.id}
+                            selected={oldTags[1] == tag.id ? true : false}
+                            key={tag.id}
+                          >
                             {tag.nama}
                           </option>
                         </>
@@ -263,22 +332,32 @@ function CreatePost() {
                     })}
                   </select>
                   <span onClick={removeTag2}>
-                    <ImCross />
+                    <ImCross color="red" />
                   </span>
                 </div>
                 <div className="flex gap-2">
                   <select
-                    onChange={(e) => setTag3(e.target.value)}
+                    onChange={(e) => (tag3 = e.target.value)}
                     ref={selectTag3}
                   >
-                    <option disabled selected value>
+                    <option
+                      disabled
+                      selected={oldTags.length > 2 ? false : true}
+                    >
                       -- pilih tag ketiga --
                     </option>
 
                     {tagsExist.map((tag) => {
+                      if (oldTags[2] == tag.id) {
+                        tag3 = oldTags[2];
+                      }
                       return (
                         <>
-                          <option value={tag.id} key={tag.id}>
+                          <option
+                            value={tag.id}
+                            selected={oldTags[2] == tag.id ? true : false}
+                            key={tag.id}
+                          >
                             {tag.nama}
                           </option>
                         </>
@@ -286,22 +365,32 @@ function CreatePost() {
                     })}
                   </select>
                   <span onClick={removeTag3}>
-                    <ImCross />
+                    <ImCross color="red" />
                   </span>
                 </div>
                 <div className="flex gap-2">
                   <select
-                    onChange={(e) => setTag4(e.target.value)}
+                    onChange={(e) => (tag4 = e.target.value)}
                     ref={selectTag4}
                   >
-                    <option disabled selected value>
+                    <option
+                      disabled
+                      selected={oldTags.length > 3 ? false : true}
+                    >
                       -- pilih tag keempat --
                     </option>
 
                     {tagsExist.map((tag) => {
+                      if (oldTags[3] == tag.id) {
+                        tag4 = oldTags[3];
+                      }
                       return (
                         <>
-                          <option value={tag.id} key={tag.id}>
+                          <option
+                            value={tag.id}
+                            selected={oldTags[3] == tag.id ? true : false}
+                            key={tag.id}
+                          >
                             {tag.nama}
                           </option>
                         </>
@@ -309,16 +398,21 @@ function CreatePost() {
                     })}
                   </select>
                   <span onClick={removeTag4}>
-                    <ImCross />
+                    <ImCross color="red" />
                   </span>
                 </div>
               </div>
               <div className="w-full self-center">
-                <input type="file" onChange={(e) => uploadImage(e)} />
+                <h1>Unggah Cover </h1>
+                <input
+                  type="file"
+                  className="p-2 rounded-md mb-3 border-2"
+                  onChange={(e) => uploadImage(e)}
+                />
                 <img
                   src={
                     baseImage == ""
-                      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cover/${postCover}`
+                      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cover/${postCoverOld}`
                       : baseImage
                   }
                   alt="cover"
@@ -346,7 +440,7 @@ function CreatePost() {
           </div>
         </form>
       </section>
-      {/* Create post end section */}
+      {/* Edit post end section */}
     </>
   );
 }

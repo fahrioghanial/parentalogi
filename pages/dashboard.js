@@ -9,6 +9,7 @@ import HeadTitle from "../components/headTitle";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
 import moment from "moment";
 import "moment/locale/id";
 import Link from "next/link";
@@ -39,8 +40,8 @@ export default function Dashboard({ posts }) {
 
 function DashboardPage({ posts }) {
   const [user, setUser] = useState([]);
-  const [isSaved, setIsSaved] = useState(false);
-
+  const [keyword, setKeyword] = useState("");
+  const router = useRouter();
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
       credentials: "same-origin",
@@ -50,6 +51,15 @@ function DashboardPage({ posts }) {
         setUser(data);
       });
   }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    router.push({
+      pathname: "/search",
+      query: { keyword: keyword },
+    });
+  };
 
   return (
     <>
@@ -63,6 +73,17 @@ function DashboardPage({ posts }) {
               <h1 className="font-semibold text-2xl md:text-4xl text-blue-700 mb-10">
                 Beranda
               </h1>
+              <form onSubmit={handleSearch} className="my-10">
+                <div className="border-blue-400 border-2 rounded-full w-1/2">
+                  <input
+                    type="text"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    placeholder="Cari judul post..."
+                    className="p-3 rounded-full w-full"
+                  />
+                </div>
+              </form>
               <div className="flex flex-col md:flex-row mb-5 gap-5 md:gap-10 font-semibold text-xl md:text-3xl">
                 <Link href={`/dashboard`}>
                   <a className="hover:text-blue-500">Beranda</a>
@@ -73,7 +94,7 @@ function DashboardPage({ posts }) {
                 <Link href={`/tag`}>
                   <a className="hover:text-blue-500">Tag</a>
                 </Link>
-                <Link href={`/tag`}>
+                <Link href={`/about`}>
                   <a className="hover:text-blue-500">Tentang Kami</a>
                 </Link>
               </div>
@@ -88,7 +109,12 @@ function DashboardPage({ posts }) {
                   >
                     <div className="py-8 px-6 bg-[#3980BF] text-white relative">
                       <div className="lg:flex lg:gap-x-4">
-                        <div className="bg-[url('/test.png')] bg-center rounded-full w-20 flex-none h-20 mb-2"></div>
+                        <div
+                          className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
+                          style={{
+                            backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${post.user.foto_profil})`,
+                          }}
+                        ></div>
                         <div className="flex flex-col">
                           <Link
                             href={{
