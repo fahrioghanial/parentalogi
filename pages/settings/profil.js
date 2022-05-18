@@ -24,9 +24,13 @@ export default function Profil() {
   const [pekerjaan, setPekerjaan] = useState("");
   const [email, setEmail] = useState("");
   const [foto_profil, setFotoProfil] = useState("");
+  const [oldFotoProfil, setOldFotoProfil] = useState("");
+  const [isUsed, setIsUsed] = useState(false);
+  // let isUsed = false;
+  let namaPengguna = "";
 
   useEffect(() => {
-    fetch("https://parentalogi.me/api/users/profile", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
       credentials: "same-origin",
     })
       .then((res) => res.json())
@@ -39,34 +43,71 @@ export default function Profil() {
         setDomisili(data.domisili);
         setPekerjaan(data.pekerjaan);
         setEmail(data.email);
-        setFotoProfil(data.foto_profil);
+        setOldFotoProfil(data.foto_profil);
       });
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isUsed) {
+      alert("Username sudah diambil, silakan gunakan username yang lain");
+    } else {
+      if (foto_profil == "") {
+        convertFromUrlToBase64String(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${oldFotoProfil}`,
+          function (dataUrl) {
+            console.log("RESULT:", dataUrl);
+            let foto_profil = dataUrl;
+            const profile = {
+              nama_pengguna,
+              nama,
+              bio,
+              tanggal_lahir,
+              domisili,
+              pekerjaan,
+              foto_profil,
+            };
 
-    const profile = {
-      nama_pengguna,
-      nama,
-      bio,
-      tanggal_lahir,
-      domisili,
-      pekerjaan,
-      foto_profil,
-    };
+            fetch(
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/edit-profile`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                credentials: "same-origin",
+                body: JSON.stringify(profile),
+              }
+            ).then(() => {
+              console.log("Profile Changed");
+              router.reload(window.location.pathname);
+            });
+          }
+        );
+      } else {
+        const profile = {
+          nama_pengguna,
+          nama,
+          bio,
+          tanggal_lahir,
+          domisili,
+          pekerjaan,
+          foto_profil,
+        };
 
-    fetch(`https://parentalogi.me/api/users/edit-profile`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "same-origin",
-      body: JSON.stringify(profile),
-    }).then(() => {
-      console.log("Profile Changed");
-      router.reload(window.location.pathname);
-    });
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/edit-profile`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "same-origin",
+          body: JSON.stringify(profile),
+        }).then(() => {
+          console.log("Profile Changed");
+          router.reload(window.location.pathname);
+        });
+      }
+    }
   };
 
   const [baseImage, setBaseImage] = useState("");
@@ -129,6 +170,36 @@ export default function Profil() {
     });
   };
 
+  function convertFromUrlToBase64String(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        callback(reader.result.replace("data:", "").replace(/^.+,/, ""));
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  }
+
+  function checkUsername(username) {
+    setNamaPengguna(username);
+    // namaPengguna = e.target.event;
+    if (username != oldUsername) {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${username}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.nama_pengguna);
+          if (data.nama_pengguna == username) {
+            setIsUsed(true);
+            console.log(isUsed);
+          } else setIsUsed(false);
+        });
+    }
+  }
+
   return (
     <>
       <HeadTitle />
@@ -139,21 +210,15 @@ export default function Profil() {
         <div className="container">
           <div className="md:ml-28 ml-5">
             <p className="font-asap text-[#3980BF] mb-4 text-3xl">
-              Setelan untuk <b>@ {oldUsername}</b>
+              Setelan Profil untuk <b>@{oldUsername}</b>
             </p>
           </div>
           <div className="flex flex-wrap">
             <div className="w-full self-top md:w-1/5 px-5 md:pl-10 md:ml-16">
               <div className="rounded-xl shadow-lg overflow-hidden mb-10">
-                <div className="py-6 px-6 bg-[#3980BF] text-white flex flex-col gap-2">
+                <div className="py-6 px-6 bg-[#3980BF] text-white flex flex-col gap-4 font-bold text-2xl">
                   <Link href="/settings/profil" className="font-medium">
                     Profil
-                  </Link>
-                  <Link href="/settings/kustomisasi" className="font-medium">
-                    Kustomisasi
-                  </Link>
-                  <Link href="/settings/notifikasi" className="font-medium">
-                    Notifikasi
                   </Link>
                   <Link href="/settings/akun" className="font-medium">
                     Akun
@@ -191,10 +256,14 @@ export default function Profil() {
                     <input
                       type="text"
                       value={nama_pengguna}
-                      onChange={(e) => setNamaPengguna(e.target.value)}
+                      onChange={(e) => checkUsername(e.target.value)}
                       placeholder="Username"
                       className="p-2 rounded-md w-full text-black"
                     />
+
+                    <p className="text-red-200 font-semibold">
+                      {isUsed ? "Username sudah diambil!" : ""}
+                    </p>
                     <p className="font-medium text-xl">Tanggal Lahir</p>
                     <input
                       type="date"
@@ -207,13 +276,12 @@ export default function Profil() {
                     <div className="flex flex-row">
                       <img
                         src={
-                          // baseImage == ""
-                          //   ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cover/${foto_profil}`
-                          //   :
-                          baseImage
+                          baseImage == ""
+                            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${oldFotoProfil}`
+                            : baseImage
                         }
                         alt="parentalogi"
-                        className="py-2 md:p-0"
+                        className="rounded-full"
                         width="60px"
                         height="60px"
                       />

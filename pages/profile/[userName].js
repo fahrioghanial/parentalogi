@@ -122,10 +122,10 @@ export default function Profile() {
       <section id="profile" className="pt-32 font-asap bg-white">
         <div className="container">
           <div className="flex flex-wrap justify-center mb-4">
-            <Image
-              src="/dummy.png"
+            <img
+              src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user.foto_profil}`}
               alt="parentalogi"
-              className="py-2 md:p-0"
+              className="rounded-full"
               width="150px"
               height="150px"
             />
@@ -191,7 +191,12 @@ export default function Profile() {
                 >
                   <div className="py-8 px-6 bg-[#3980BF] text-white relative">
                     <div className="lg:flex lg:gap-x-4">
-                      <div className="bg-[url('/test.png')] bg-center rounded-full w-20 flex-none h-20 mb-2"></div>
+                      <div
+                        className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
+                        style={{
+                          backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user.foto_profil})`,
+                        }}
+                      ></div>
                       <div>
                         <h3 className="font-medium">{post.user.nama}</h3>
                         <small>

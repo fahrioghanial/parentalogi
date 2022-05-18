@@ -42,6 +42,17 @@ export default function Home({ featuredPost }) {
     redirectToAuth("signin");
   }
 
+  const [user, setUser] = useState([]);
+  useEffect(() => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${featuredPost.user.nama_pengguna}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data);
+      });
+  }, []);
+
   return (
     <>
       <HeadTitle />
@@ -161,11 +172,22 @@ export default function Home({ featuredPost }) {
               Postingan Unggulan
             </h1>
             <div className="w-full px-4">
-              <div className="rounded-t-xl shadow-lg overflow-hidden h-72 bg-[url('/test.png')]"></div>
+              <div className="rounded-t-xl shadow-lg overflow-hidden">
+                <img
+                  src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cover/${featuredPost.foto_cover}`}
+                  alt=""
+                  className="w-full"
+                />
+              </div>
               <div className="rounded-b-xl shadow-lg overflow-hidden mb-10">
                 <div className="py-8 px-6 bg-[#3980BF] text-white">
                   <div className="lg:flex lg:gap-x-4">
-                    <div className="bg-[url('/test.png')] bg-center rounded-full w-20 flex-none h-20 mb-2"></div>
+                    <div
+                      className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
+                      style={{
+                        backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user.foto_profil})`,
+                      }}
+                    ></div>
                     <div>
                       <h3 className="font-medium">{featuredPost.user.nama}</h3>
                       <small>

@@ -100,9 +100,9 @@ function DashboardPage() {
                     <div className="py-8 px-6 bg-[#3980BF] text-white relative">
                       <div className="lg:flex lg:gap-x-4">
                         <div
-                          className="bg-center rounded-full w-20 flex-none h-20 mb-2"
+                          className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
                           style={{
-                            backgroundImage: `url("/dummyprofile.png")`,
+                            backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${post.user.foto_profil})`,
                           }}
                         ></div>
                         <div>

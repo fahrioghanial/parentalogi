@@ -109,13 +109,12 @@ function DashboardPage({ posts }) {
                   >
                     <div className="py-8 px-6 bg-[#3980BF] text-white relative">
                       <div className="lg:flex lg:gap-x-4">
-                        <div className="rounded-full w-20 flex-none h-20 mb-2 bg-contain bg-center bg-no-repeat">
-                          <img
-                            src={`/dummyprofile.png`}
-                            className="rounded-full"
-                            alt=""
-                          />
-                        </div>
+                        <div
+                          className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
+                          style={{
+                            backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${post.user.foto_profil})`,
+                          }}
+                        ></div>
                         <div className="flex flex-col">
                           <Link
                             href={{

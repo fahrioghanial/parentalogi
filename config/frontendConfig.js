@@ -4,34 +4,6 @@ import { appInfo } from "./appInfo";
 import { useEffect, useState } from "react";
 
 export let frontendConfig = () => {
-  // const [user, setUser] = useState([]);
-  // const [isFollow, setIsFollow] = useState(false);
-  // useEffect(() => {
-  //   fetch(
-  //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${dataUserFromQuery.userName}`,
-  //     {
-  //       credentials: "same-origin",
-  //     }
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setUser(data);
-  //     });
-
-  //   fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/followed-users`)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       {
-  //         data.map((d) => {
-  //           if (d.nama_pengguna == dataUserFromQuery.userName) {
-  //             setIsFollow(true);
-  //           }
-  //         });
-  //       }
-  //     });
-  // }, []);
-  var user = [];
-
   return {
     appInfo,
     recipeList: [
@@ -48,7 +20,7 @@ export let frontendConfig = () => {
         },
         palette: {
           background: "#3980BF",
-          error: "#ffcccb",
+          error: "#ff5774",
           textTitle: "#FFFFFF",
           textLabel: "#FFFFFF",
           textInput: "#000000",
@@ -62,6 +34,7 @@ export let frontendConfig = () => {
         style: {
           container: {
             fontFamily: "Asap, sans-serif",
+            fontWeight: "bold",
           },
         },
         signInAndUpFeature: {
@@ -73,47 +46,12 @@ export let frontendConfig = () => {
                 placeholder: "Nama Pengguna",
 
                 // validate: async (value) => {
-                //   // if (
-                //   // function getUsername() {
-                //   fetch(
-                //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${value}`,
-                //     {
-                //       credentials: "same-origin",
-                //     }
-                //   )
-                //     .then((res) => res.json())
-                //     .then((data) => {
-                //       // user = data;
-                //       if (data.nama_pengguna == null) {
-                //         return true;
-                //       }
-                //       return false;
-                //     });
-                //   // }
-                //   console.log(
-                //     fetch(
-                //       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${value}`,
-                //       {
-                //         credentials: "same-origin",
-                //       }
-                //     ).then((res) => {
-                //       return res.json().then((data) => {
-                //         // user = data;
-                //         if (data.nama_pengguna == null) {
-                //           return true;
-                //         }
-                //         return false;
-                //       });
-                //     })
-                //   );
-
-                //   // ) {
-                //   //   console.log("username belum diambil");
-                //   //   return undefined;
-                //   // } else {
-                //   //   console.log("username sudah diambil atuh");
-                //   //   return "username has been taken";
-                //   // }
+                //   console.log("checkusername:", CheckUsername(value));
+                //   console.log("value:", value);
+                //   if (value == CheckUsername(value)) {
+                //     return "Username already used";
+                //   }
+                //   return undefined;
                 // },
               },
               {
