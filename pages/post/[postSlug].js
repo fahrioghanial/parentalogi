@@ -30,7 +30,7 @@ export async function getStaticPaths() {
   });
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 }
 
@@ -44,7 +44,7 @@ export async function getStaticProps(context) {
     props: {
       post: data,
     },
-    revalidate: 10,
+    revalidate: 1,
   };
 }
 
@@ -62,6 +62,7 @@ export default function PostProtected({ post }) {
 }
 
 function Post({ post }) {
+  const router = useRouter();
   async function daftarClicked() {
     redirectToAuth("signup");
   }
@@ -147,6 +148,10 @@ function Post({ post }) {
           });
       });
   };
+
+  if (router.isFallback) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <>
