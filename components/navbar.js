@@ -68,6 +68,7 @@ export default function Navbar() {
     profilePicture.addEventListener("click", function (ev) {
       profilePicture.classList.toggle("border-white");
       profilePicture.classList.toggle("border-4");
+      profilePicture.classList.toggle("rounded-full");
       navMenuInside.classList.toggle("hidden");
       ev.stopPropagation();
     });
@@ -112,10 +113,14 @@ export default function Navbar() {
                     </button>
                   </li>
                   <li className="group">
-                    <button
-                      id="profile-picture"
-                      className="bg-[url('/test.png')] bg-center rounded-full w-12 h-12 hover:border-blue-400 hover:border-4"
-                    ></button>
+                    <button id="profile-picture">
+                      <div
+                        className="bg-contain bg-center bg-no-repeat rounded-full w-12 flex-none h-12"
+                        style={{
+                          backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user.foto_profil})`,
+                        }}
+                      ></div>
+                    </button>
                   </li>
                   <li className="">
                     <nav
