@@ -17,10 +17,6 @@ export default function Footer(props) {
               </p>
             </div>
             <div className="w-full mb-12 md:w-1/4">
-              <h1 className="font-semibold text-white mb-4 text-xl md:text-2xl">
-                Contact Us
-              </h1>
-
               <p className="text-white mt-10 text-sm md:invisible">
                 © 2022 Parentalogi. All rights reserved
               </p>
