@@ -12,7 +12,7 @@ export async function getStaticProps() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/`);
   const allPosts = await res.json();
 
-  var largest = allPosts[0].jumlah_disukai;
+  var largest = allPosts[0]?.jumlah_disukai;
   for (var i = 0; i < allPosts.length; i++) {
     if (largest < allPosts[i].jumlah_disukai) {
       largest = allPosts[i].jumlah_disukai;
@@ -23,8 +23,12 @@ export async function getStaticProps() {
     (allPosts) => allPosts.jumlah_disukai == largest
   );
 
-  const featuredPost = featuredPostRaw[0];
-
+  let featuredPost;
+  if (featuredPostRaw[0] != undefined) {
+    featuredPost = featuredPostRaw[0];
+  } else {
+    featuredPost = "";
+  }
   return {
     props: {
       featuredPost,
@@ -45,7 +49,7 @@ export default function Home({ featuredPost }) {
   const [user, setUser] = useState([]);
   useEffect(() => {
     fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${featuredPost.user.nama_pengguna}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${featuredPost?.user?.nama_pengguna}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -162,69 +166,75 @@ export default function Home({ featuredPost }) {
       </section>
       {/* Fitur Utama section end */}
 
-      <hr className="border-2 border-black mt-32 mx-16" />
-
       {/* Featured Post section start */}
-      <section id="featured-post" className="pt-32 font-asap md:px-16">
-        <div className="container">
-          <div className="flex flex-wrap">
-            <h1 className="w-full font-bold text-2xl mb-5 px-5 md:text-4xl">
-              Postingan Unggulan
-            </h1>
-            <div className="w-full px-4">
-              <div className="rounded-t-xl shadow-lg overflow-hidden">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cover/${featuredPost.foto_cover}`}
-                  alt=""
-                  className="w-full"
-                />
-              </div>
-              <div className="rounded-b-xl shadow-lg overflow-hidden mb-10">
-                <div className="py-8 px-6 bg-[#3980BF] text-white">
-                  <div className="lg:flex lg:gap-x-4">
-                    <div
-                      className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
-                      style={{
-                        backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user.foto_profil})`,
-                      }}
-                    ></div>
-                    <div>
-                      <h3 className="font-medium">{featuredPost.user.nama}</h3>
-                      <small>
-                        {moment(featuredPost.createdAt).format("LLL")}
-                        {featuredPost.telah_diubah
-                          ? " (Diubah pada " +
-                            moment(featuredPost.updatedAt).format("ll") +
-                            ")"
-                          : ""}
-                      </small>
-                      <h1 className="font-bold text-base my-2 md:text-2xl">
-                        {featuredPost.judul}
-                      </h1>
-                      <div className="flex gap-x-1 mb-4 ">
-                        {featuredPost.tags.map((tag) => {
-                          return <a key={tag.id}>#{tag.nama}</a>;
-                        })}
-                      </div>
+      {featuredPost != "" && (
+        <>
+          <hr className="border-2 border-black mt-32 mx-16" />
 
-                      <div className="flex flex-col relative">
-                        <div className="flex gap-x-10 mb-4 md:m-0">
-                          <div className="flex gap-x-2">
-                            <svg
-                              width="26"
-                              height="24"
-                              viewBox="0 0 26 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M25.041 5.30861C24.6483 4.39935 24.0821 3.57538 23.374 2.88283C22.6654 2.18822 21.83 1.63622 20.9131 1.25686C19.9623 0.861914 18.9426 0.65976 17.9131 0.66213C16.4688 0.66213 15.0596 1.05764 13.835 1.80471C13.542 1.98342 13.2637 2.17971 13 2.39358C12.7363 2.17971 12.458 1.98342 12.165 1.80471C10.9404 1.05764 9.53125 0.66213 8.08691 0.66213C7.04687 0.66213 6.03906 0.861349 5.08691 1.25686C4.16699 1.63772 3.33789 2.18557 2.62598 2.88283C1.91698 3.5746 1.35062 4.39876 0.958984 5.30861C0.551758 6.2549 0.34375 7.25979 0.34375 8.29397C0.34375 9.26955 0.542969 10.2862 0.938477 11.3203C1.26953 12.1846 1.74414 13.0811 2.35059 13.9863C3.31152 15.419 4.63281 16.9131 6.27344 18.4278C8.99219 20.9385 11.6846 22.6729 11.7988 22.7432L12.4932 23.1885C12.8008 23.3848 13.1963 23.3848 13.5039 23.1885L14.1982 22.7432C14.3125 22.6699 17.002 20.9385 19.7236 18.4278C21.3643 16.9131 22.6855 15.419 23.6465 13.9863C24.2529 13.0811 24.7305 12.1846 25.0586 11.3203C25.4541 10.2862 25.6533 9.26955 25.6533 8.29397C25.6562 7.25979 25.4482 6.2549 25.041 5.30861Z"
-                                fill="white"
-                              />
-                            </svg>
-                            <small>
-                              {featuredPost.jumlah_disukai} Disukai{" "}
-                            </small>
+          <section id="featured-post" className="pt-32 font-asap md:px-16">
+            <div className="container">
+              <div className="flex flex-wrap">
+                <h1 className="w-full font-bold text-2xl mb-5 px-5 md:text-4xl">
+                  Postingan Unggulan
+                </h1>
+                <div className="w-full px-4">
+                  <div className="rounded-t-xl shadow-lg overflow-hidden">
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cover/${featuredPost?.foto_cover}`}
+                      alt=""
+                      className="w-full"
+                    />
+                  </div>
+                  <div className="rounded-b-xl shadow-lg overflow-hidden mb-10">
+                    <div className="py-8 px-6 bg-[#3980BF] text-white">
+                      <div className="lg:flex lg:gap-x-4">
+                        <div
+                          className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
+                          style={{
+                            backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user?.foto_profil})`,
+                          }}
+                        ></div>
+                        <div>
+                          <h3 className="font-medium">
+                            {featuredPost?.user?.nama}
+                          </h3>
+                          <small>
+                            {moment(featuredPost?.createdAt).format("LLL")}
+                            {featuredPost?.telah_diubah
+                              ? " (Diubah pada " +
+                                moment(featuredPost?.updatedAt).format("ll") +
+                                ")"
+                              : ""}
+                          </small>
+                          <h1 className="font-bold text-base my-2 md:text-2xl">
+                            {featuredPost?.judul}
+                          </h1>
+                          <div className="flex gap-x-1 mb-4 ">
+                            {featuredPost?.tags?.map((tag) => {
+                              return <a key={tag.id}>#{tag.nama}</a>;
+                            })}
+                          </div>
+
+                          <div className="flex flex-col relative">
+                            <div className="flex gap-x-10 mb-4 md:m-0">
+                              <div className="flex gap-x-2">
+                                <svg
+                                  width="26"
+                                  height="24"
+                                  viewBox="0 0 26 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M25.041 5.30861C24.6483 4.39935 24.0821 3.57538 23.374 2.88283C22.6654 2.18822 21.83 1.63622 20.9131 1.25686C19.9623 0.861914 18.9426 0.65976 17.9131 0.66213C16.4688 0.66213 15.0596 1.05764 13.835 1.80471C13.542 1.98342 13.2637 2.17971 13 2.39358C12.7363 2.17971 12.458 1.98342 12.165 1.80471C10.9404 1.05764 9.53125 0.66213 8.08691 0.66213C7.04687 0.66213 6.03906 0.861349 5.08691 1.25686C4.16699 1.63772 3.33789 2.18557 2.62598 2.88283C1.91698 3.5746 1.35062 4.39876 0.958984 5.30861C0.551758 6.2549 0.34375 7.25979 0.34375 8.29397C0.34375 9.26955 0.542969 10.2862 0.938477 11.3203C1.26953 12.1846 1.74414 13.0811 2.35059 13.9863C3.31152 15.419 4.63281 16.9131 6.27344 18.4278C8.99219 20.9385 11.6846 22.6729 11.7988 22.7432L12.4932 23.1885C12.8008 23.3848 13.1963 23.3848 13.5039 23.1885L14.1982 22.7432C14.3125 22.6699 17.002 20.9385 19.7236 18.4278C21.3643 16.9131 22.6855 15.419 23.6465 13.9863C24.2529 13.0811 24.7305 12.1846 25.0586 11.3203C25.4541 10.2862 25.6533 9.26955 25.6533 8.29397C25.6562 7.25979 25.4482 6.2549 25.041 5.30861Z"
+                                    fill="white"
+                                  />
+                                </svg>
+                                <small>
+                                  {featuredPost?.jumlah_disukai} Disukai{" "}
+                                </small>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -233,9 +243,9 @@ export default function Home({ featuredPost }) {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        </>
+      )}
       {/* Featured Post section end */}
 
       <hr className="border-2 border-black mt-32 mx-16" />
