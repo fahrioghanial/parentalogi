@@ -36,7 +36,7 @@ function Akun() {
   const [isSame, setIsSame] = useState(false);
 
   useEffect(() => {
-    fetch("https://parentalogi.me/api/users/profile", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
       credentials: "same-origin",
     })
       .then((res) => res.json())
@@ -52,14 +52,17 @@ function Akun() {
       alert("Konfirmasi kata sandi tidak sesuai!");
     } else {
       const password = { oldPassword, newPassword };
-      fetch(`https://parentalogi.me/api/users/change-password`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "same-origin",
-        body: JSON.stringify(password),
-      }).then((response) => {
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/change-password`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "same-origin",
+          body: JSON.stringify(password),
+        }
+      ).then((response) => {
         console.log("Password Changed");
         console.log(response.message);
       });
