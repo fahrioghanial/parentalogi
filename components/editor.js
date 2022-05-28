@@ -15,6 +15,17 @@ function Editor({ onChange, editorLoaded, name, value }) {
     <div>
       {editorLoaded ? (
         <CKEditor
+          config={{
+            toolbar: {
+              removeItems: [
+                "insertTable",
+                "uploadImage",
+                "mediaEmbed",
+                "blockQuote",
+              ],
+              shouldNotGroupWhenFull: true,
+            },
+          }}
           type=""
           name={name}
           editor={ClassicEditor}

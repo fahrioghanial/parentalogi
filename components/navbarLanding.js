@@ -57,37 +57,37 @@ export default function NavbarLanding(props) {
                 <span className="w-[30px] h-[2px] my-2 block bg-white"></span>
                 <span className="w-[30px] h-[2px] my-2 block bg-white"></span>
               </button>
-              <nav
+              <div
                 id="nav-menu"
                 className="hidden absolute py-3 bg-[#3E85C5] w-full right-4 top-full rounded-lg shadow-lg max-w-[250px] md:block md:static md:bg-transparent md:max-w-full md:shadow-none md:rounded-none"
               >
-                <ul className="block md:flex md:text-xl">
-                  <li className="group">
+                <div className="block md:flex md:text-xl">
+                  <div className="group">
                     <button
-                      className="text-white font-bold py-2 mx-8 flex group-hover:text-[#9CA3AF]"
+                      className="text-white font-bold py-2 mx-8 flex group-hover:text-[#9CA3AF] text-2xl"
                       onClick={aboutClicked}
                     >
                       Tentang Kami
                     </button>
-                  </li>
-                  <li className="group">
+                  </div>
+                  <div className="group">
                     <button
                       className="text-white font-bold py-2 mx-8 md:m-0 flex group-hover:bg-[#9CA3AF] md:text-[#3980BF] md:bg-white md:rounded-lg md:px-3"
                       onClick={masukClicked}
                     >
                       Masuk
                     </button>
-                  </li>
-                  <li className="group">
+                  </div>
+                  <div className="group">
                     <button
                       className="text-white font-bold py-2 mx-8 flex group-hover:bg-[#9CA3AF] md:text-[#3980BF] md:bg-white md:rounded-lg md:px-3"
                       onClick={daftarClicked}
                     >
                       Daftar
                     </button>
-                  </li>
-                </ul>
-              </nav>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -1,12 +1,7 @@
 import HeadTitle from "./headTitle";
-import styles from "../styles/Home.module.css";
-import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import Footer from "./footer";
-import Navbar from "./navbar";
-import Editor from "./editor";
-import { AiOutlineMenu, AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { useEffect, useState } from "react";
+import { AiFillHeart } from "react-icons/ai";
 import Link from "next/link";
 import moment from "moment";
 import "moment/locale/id";
@@ -176,7 +171,7 @@ export default function Comments({ comments, id_post, username, post_slug }) {
                       }}
                     ></div>
                     <div>
-                      <h3 className="font-medium">
+                      <h3 className="font-medium m-0">
                         {rootComment.data_penulis.nama}
                       </h3>
                       <small>
@@ -188,7 +183,7 @@ export default function Comments({ comments, id_post, username, post_slug }) {
                             ")"
                           : ""}
                       </small>
-                      <h1 className=" text-base my-2 md:text-xl">
+                      <h1 className=" text-base my-2 md:text-xl font-normal">
                         {rootComment.isi_text}
                       </h1>
                       <div className="flex">
@@ -251,7 +246,7 @@ export default function Comments({ comments, id_post, username, post_slug }) {
                               }}
                             ></div>
                             <div>
-                              <h3 className="font-medium">
+                              <h3 className="font-medium m-0">
                                 {replyComment.data_penulis.nama}
                               </h3>
                               <small>
@@ -265,7 +260,7 @@ export default function Comments({ comments, id_post, username, post_slug }) {
                                     ")"
                                   : ""}
                               </small>
-                              <h1 className=" text-base my-2 md:text-xl">
+                              <h1 className=" text-base my-2 md:text-xl font-normal">
                                 {replyComment.isi_text}
                               </h1>
                               <div className="flex">

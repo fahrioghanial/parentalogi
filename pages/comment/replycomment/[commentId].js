@@ -1,19 +1,9 @@
 import HeadTitle from "../../../components/headTitle";
-import styles from "../../../styles/Home.module.css";
-import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import Footer from "../../../components/footer";
-import Navbar from "../../../components/navbar";
-import Editor from "../../../components/editor";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import Heading from "../../../components/heading";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
-import { verifySession } from "supertokens-node/recipe/session/framework/express";
-import { SessionRequest } from "supertokens-node/framework/express";
-import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import axios from "axios";
-import { ImCross } from "react-icons/im";
 
 const EmailPasswordAuthNoSSR = dynamic(
   new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
@@ -71,7 +61,7 @@ function ReplyComment() {
   return (
     <>
       <HeadTitle title="Reply Comment" />
-      <Navbar />
+      <Heading />
       {/* Reply comment section */}
       <h1 className="pt-32 font-semibold text-2xl md:px-16 px-4">
         Balas Komentar

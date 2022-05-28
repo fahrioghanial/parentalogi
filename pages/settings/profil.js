@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Footer from "../../components/footer";
-import Navbar from "../../components/navbar";
+import Heading from "../../components/heading";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
@@ -218,7 +218,7 @@ function Profil() {
   return (
     <>
       <HeadTitle />
-      <Navbar />
+      <Heading />
 
       {/* Options section start */}
       <section id="dashboard" className="pt-32 font-asap bg-white">

@@ -1,12 +1,9 @@
 import HeadTitle from "../../components/headTitle";
-import styles from "../../styles/Home.module.css";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Footer from "../../components/footer";
-import Navbar from "../../components/navbar";
-import Image from "next/image";
-import { AiOutlineMenu } from "react-icons/ai";
+import Heading from "../../components/heading";
 import { GoLocation } from "react-icons/go";
 import { FaBirthdayCake } from "react-icons/fa";
 import { GiSuitcase } from "react-icons/gi";
@@ -87,7 +84,7 @@ function Profile() {
   return (
     <>
       <HeadTitle title="Profile" />
-      <Navbar />
+      <Heading />
 
       {/* Profile section start */}
       <section id="profile" className="pt-32 font-asap bg-white">
@@ -147,7 +144,7 @@ function Profile() {
               </div>
             </div>
             <div className="w-full text-center mb-2 font-bold text-xl md:text-3xl">
-              <h1>Postingan Saya</h1>
+              <h1 className="md:text-4xl text-2xl">Postingan Saya</h1>
             </div>
             {posts.map((post) => {
               return (
@@ -164,7 +161,7 @@ function Profile() {
                         }}
                       ></div>
                       <div>
-                        <h3 className="font-medium">{post.user.nama}</h3>
+                        <h3 className="font-medium m-0">{post.user.nama}</h3>
                         <small>
                           {moment(post.createdAt).format("LLL")}
                           {/* ({moment(post.createdAt).fromNow()}) */}

@@ -1,10 +1,6 @@
 import HeadTitle from "../../components/headTitle";
-import styles from "../../styles/Home.module.css";
-import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import Footer from "../../components/footer";
-import Navbar from "../../components/navbar";
 import Editor from "../../components/editor";
 import Link from "next/link";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
@@ -204,7 +200,7 @@ function CreatePost() {
                 />
               </div>
               <div className="w-1/2 self-center flex flex-col gap-4 mb-5">
-                <h1>Pilih Tags </h1>
+                <h1 className="text-xl font-normal">Pilih Tags </h1>
                 <div className="flex gap-2">
                   <select
                     onChange={(e) => setTag1(e.target.value)}
@@ -299,13 +295,13 @@ function CreatePost() {
                 </div>
               </div>
               <div className="w-full self-center">
-                <h1>Unggah Cover </h1>
+                <h1 className="text-xl font-normal">Unggah Cover </h1>
                 <input
                   type="file"
                   className="p-2 rounded-md mb-3 border-2"
                   onChange={(e) => uploadImage(e)}
                 />
-                <img src={baseImage} alt="cover" />
+                {baseImage != "" && <img src={baseImage} alt="cover" />}
               </div>
               <div className="w-full self-center">
                 <Editor

@@ -1,13 +1,12 @@
 import HeadTitle from "../../components/headTitle";
-import styles from "../../styles/Home.module.css";
-import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Footer from "../../components/footer";
-import Navbar from "../../components/navbar";
+import Heading from "../../components/heading";
 import Link from "next/link";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
+import Navbar from "../../components/navbar";
 
 const EmailPasswordAuthNoSSR = dynamic(
   new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
@@ -90,12 +89,15 @@ function Tag() {
   return (
     <>
       <HeadTitle title="Tag" />
-      <Navbar />
+      <Heading />
       {/* Tag section start */}
       <section id="tag" className="pt-32 font-asap md:px-16">
         <div className="container">
-          <div className="flex flex-col md:flex-row mb-5 px-5 gap-3 justify-between">
-            <h1 className=" font-bold text-xl md:text-4xl">Tag Terpopuler</h1>
+          <h1 className=" font-bold text-xl md:text-4xl mb-8">
+            Tag Terpopuler
+          </h1>
+          <div className="flex flex-col md:flex-row mb-5 px-5 justify-between items-center">
+            <Navbar />
             <button
               className="w-auto text-white font-semibold py-2 text-xl hover:bg-[#9CA3AF] bg-[#3980BF] rounded-lg px-3"
               onClick={createTagClicked}
@@ -125,21 +127,9 @@ function Tag() {
                             {tag.nama}
                           </a>
                         </Link>
-                        <h3 className="md:text-lg">{tag.deskripsi}</h3>
-                        {followedTags.map((ft) => {
-                          <button
-                            className={`rounded-lg text-white text-xl py-3 px-3 hover:shadow-lg hover:opacity-80 mt-2 mb-10 ${
-                              ft.id_tag == tag.id
-                                ? "bg-red-500"
-                                : "bg-green-500"
-                            }`}
-                            onClick={() => handleFollowTag(tag.id)}
-                          >
-                            {ft.id_tag == tag.id
-                              ? "Berhenti Mengikuti"
-                              : "Ikuti"}
-                          </button>;
-                        })}
+                        <h3 className="md:text-lg font-normal">
+                          {tag.deskripsi}
+                        </h3>
                       </div>
                     </div>
                   </div>

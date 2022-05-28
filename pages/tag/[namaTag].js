@@ -1,18 +1,15 @@
 import React from "react";
-import styles from "../../styles/Home.module.css";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
-import supertokensNode from "supertokens-node";
-import { backendConfig } from "../../config/backendConfig";
-import Session from "supertokens-node/recipe/session";
 import HeadTitle from "../../components/headTitle";
-import Navbar from "../../components/navbar";
+import Heading from "../../components/heading";
 import Footer from "../../components/footer";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import moment from "moment";
 import "moment/locale/id";
 import Link from "next/link";
+import Navbar from "../../components/navbar";
 
 const EmailPasswordAuthNoSSR = dynamic(
   new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
@@ -58,7 +55,7 @@ function DashboardPage() {
   return (
     <>
       <HeadTitle title={`${namaTag}`} />
-      <Navbar />
+      <Heading />
       <div
         className="w-full pt-28"
         style={{
@@ -68,26 +65,15 @@ function DashboardPage() {
       <h1 className="px-5 md:pl-10 mt-10 font-bold text-xl md:text-3xl">
         Tag: {tag.nama}
       </h1>
-      <h1 className="px-5 md:pl-10 text-lg md:text-2xl">{tag.deskripsi}</h1>
+      <h1 className="px-5 md:pl-10 text-lg md:text-2xl font-normal">
+        {tag.deskripsi}
+      </h1>
       {/* Dashboard section start */}
       <section id="dashboard" className="pt-12 font-asap ">
         <div className="container">
           <div className="flex flex-wrap">
             <div className="w-full self-center px-5 md:pl-10">
-              <div className="flex flex-col md:flex-row mb-5 gap-5 md:gap-10 font-semibold text-xl md:text-3xl">
-                <Link href={`/dashboard`}>
-                  <a className="hover:text-blue-500">Beranda</a>
-                </Link>
-                <Link href={`/readinglists`}>
-                  <a className="hover:text-blue-500">Daftar Bacaan</a>
-                </Link>
-                <Link href={`/tag`}>
-                  <a className="hover:text-blue-500">Tag</a>
-                </Link>
-                <Link href={`/about`}>
-                  <a className="hover:text-blue-500">Tentang Kami</a>
-                </Link>
-              </div>
+              <Navbar />
 
               {/* card */}
 
@@ -106,7 +92,7 @@ function DashboardPage() {
                           }}
                         ></div>
                         <div>
-                          <h3 className="font-medium">{post.user.nama}</h3>
+                          <h3 className="font-medium m-0">{post.user.nama}</h3>
                           <small>
                             {moment(post.createdAt).format("LLL")}
                             {/* ({moment(post.createdAt).fromNow()}) */}
@@ -128,18 +114,21 @@ function DashboardPage() {
                             </Link>
                           </h1>
                           <div className="flex gap-x-1 mb-4 ">
-                            {post.tags.map((tag) => {
+                            {console.log(post)}
+                            {post.tags.map((t) => {
                               return (
-                                <Link
-                                  href={{
-                                    pathname: `/tag/${tag.nama}`,
-                                  }}
-                                  key={tag.id}
-                                >
-                                  <a className="hover:text-black">
-                                    #{tag.nama}
-                                  </a>
-                                </Link>
+                                <>
+                                  <Link
+                                    href={{
+                                      pathname: `/tag/${t.nama}`,
+                                    }}
+                                  >
+                                    <a className="hover:text-black">
+                                      #{t.nama}
+                                    </a>
+                                    {/* {console.log(t)} */}
+                                  </Link>
+                                </>
                               );
                             })}
                           </div>

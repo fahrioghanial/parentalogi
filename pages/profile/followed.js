@@ -1,17 +1,10 @@
 import HeadTitle from "../../components/headTitle";
-import styles from "../../styles/Home.module.css";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Footer from "../../components/footer";
-import Navbar from "../../components/navbar";
-import Image from "next/image";
-import { AiOutlineMenu } from "react-icons/ai";
-import { GoLocation } from "react-icons/go";
-import { FaBirthdayCake } from "react-icons/fa";
-import { GiSuitcase } from "react-icons/gi";
+import Heading from "../../components/heading";
 import Link from "next/link";
-import moment from "moment";
 import "moment/locale/id";
 
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
@@ -60,14 +53,16 @@ function Profile() {
   return (
     <>
       <HeadTitle title="Profile" />
-      <Navbar />
+      <Heading />
 
       {/* Profile section start */}
       <section id="profile" className="pt-32 font-asap bg-white">
         <div className="container">
           <div className="flex flex-wrap justify-center">
             <div className="w-full text-center mb-5 font-bold text-xl md:text-3xl">
-              <h1>Daftar pengguna yang anda ikuti</h1>
+              <h1 className="md:text-4xl text-2xl">
+                Daftar pengguna yang anda ikuti
+              </h1>
             </div>
             {followedUsers.map((fu) => {
               return (

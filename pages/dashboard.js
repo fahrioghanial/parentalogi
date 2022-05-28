@@ -1,18 +1,15 @@
 import React from "react";
-import styles from "../styles/Home.module.css";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
-import supertokensNode from "supertokens-node";
-import { backendConfig } from "../config/backendConfig";
-import Session from "supertokens-node/recipe/session";
 import HeadTitle from "../components/headTitle";
-import Navbar from "../components/navbar";
+import Heading from "../components/heading";
 import Footer from "../components/footer";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import moment from "moment";
 import "moment/locale/id";
 import Link from "next/link";
+import Navbar from "../components/navbar";
 
 const EmailPasswordAuthNoSSR = dynamic(
   new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
@@ -64,9 +61,9 @@ function DashboardPage({ posts }) {
   return (
     <>
       <HeadTitle />
-      <Navbar />
+      <Heading />
       {/* Dashboard section start */}
-      <section id="dashboard" className="pt-24 font-asap ">
+      <section id="dashboard" className="pt-24 font-asap">
         <div className="container">
           <div className="flex flex-wrap">
             <div className="w-full self-center px-5 md:pl-10">
@@ -84,20 +81,8 @@ function DashboardPage({ posts }) {
                   />
                 </div>
               </form>
-              <div className="flex flex-col md:flex-row mb-5 gap-5 md:gap-10 font-semibold text-xl md:text-3xl">
-                <Link href={`/dashboard`}>
-                  <a className="hover:text-blue-500">Beranda</a>
-                </Link>
-                <Link href={`/readinglists`}>
-                  <a className="hover:text-blue-500">Daftar Bacaan</a>
-                </Link>
-                <Link href={`/tag`}>
-                  <a className="hover:text-blue-500">Tag</a>
-                </Link>
-                <Link href={`/about`}>
-                  <a className="hover:text-blue-500">Tentang Kami</a>
-                </Link>
-              </div>
+
+              <Navbar />
 
               {/* card */}
 

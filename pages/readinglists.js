@@ -1,17 +1,14 @@
 import React from "react";
-import styles from "../styles/Home.module.css";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
-import supertokensNode from "supertokens-node";
-import { backendConfig } from "../config/backendConfig";
-import Session from "supertokens-node/recipe/session";
 import HeadTitle from "../components/headTitle";
-import Navbar from "../components/navbar";
+import Heading from "../components/heading";
 import Footer from "../components/footer";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
 import "moment/locale/id";
 import Link from "next/link";
+import Navbar from "../components/navbar";
 
 const EmailPasswordAuthNoSSR = dynamic(
   new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
@@ -63,7 +60,7 @@ function DashboardPage({ posts }) {
   return (
     <>
       <HeadTitle />
-      <Navbar />
+      <Heading />
       {/* Dashboard section start */}
       <section id="dashboard" className="pt-24 font-asap ">
         <div className="container">
@@ -72,20 +69,8 @@ function DashboardPage({ posts }) {
               <h1 className="font-semibold text-2xl md:text-4xl text-blue-700 mb-10">
                 Daftar Bacaan
               </h1>
-              <div className="flex flex-col md:flex-row mb-5 gap-5 md:gap-10 font-semibold text-xl md:text-3xl">
-                <Link href={`/dashboard`}>
-                  <a className="hover:text-blue-500">Beranda</a>
-                </Link>
-                <Link href={`/readinglists`}>
-                  <a className="hover:text-blue-500">Daftar Bacaan</a>
-                </Link>
-                <Link href={`/tag`}>
-                  <a className="hover:text-blue-500">Tag</a>
-                </Link>
-                <Link href={`/about`}>
-                  <a className="hover:text-blue-500">Tentang Kami</a>
-                </Link>
-              </div>
+
+              <Navbar />
 
               {/* card */}
 
@@ -192,6 +177,11 @@ function DashboardPage({ posts }) {
                   </>
                 );
               })}
+              {readingList == "" && (
+                <div className="md:text-4xl font-bold text-xl my-20">
+                  Daftar Bacaan Kosong
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -1,10 +1,8 @@
 import HeadTitle from "../components/headTitle";
-import styles from "../styles/Home.module.css";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
-import { useRouter } from "next/router";
 import Footer from "../components/footer";
-import NavbarLanding from "../components/navbarLanding";
-import { useEffect, useRef, useState } from "react";
+import NavbarLanding from "../components/NavbarLanding";
+import { useEffect, useState } from "react";
 import moment from "moment";
 import "moment/locale/id";
 
@@ -69,9 +67,9 @@ export default function Home({ featuredPost }) {
       >
         <div className="container">
           <div className="flex flex-wrap">
-            <div className="w-full self-center md:w-2/3">
+            <div className="w-full self-center md:w-2/3 mt-16">
               <img
-                src="/Couple bicycle-bro.png"
+                src="/Couple bicycle-bro new.png"
                 alt="parentalogi"
                 className="max-w-full mx-auto"
               />
@@ -97,13 +95,13 @@ export default function Home({ featuredPost }) {
       </section>
       {/* Home section end */}
 
-      <hr className="border-2 border-black mt-32 mx-16 md:mt-0" />
+      <hr className="border-2 border-black mt-20 mx-16 md:mt-0" />
 
       {/* Fitur Utama section start */}
-      <section id="fitur-utama" className="pt-32 font-asap md:px-16">
+      <section id="fitur-utama" className="pt-16 font-asap md:px-16">
         <div className="container">
           <div className="flex flex-wrap">
-            <h1 className="w-full font-bold text-2xl mb-5 px-5 md:text-4xl">
+            <h1 className="w-full font-bold text-2xl mb-5 px-5 md:text-4xl m-0">
               Fitur Utama Kami
             </h1>
             <div className="w-full px-5 mb-10 md:w-1/3">
@@ -169,12 +167,12 @@ export default function Home({ featuredPost }) {
       {/* Featured Post section start */}
       {featuredPost != "" && (
         <>
-          <hr className="border-2 border-black mt-32 mx-16" />
+          <hr className="border-2 border-black mt-20 mx-16" />
 
-          <section id="featured-post" className="pt-32 font-asap md:px-16">
+          <section id="featured-post" className="pt-16 font-asap md:px-16">
             <div className="container">
               <div className="flex flex-wrap">
-                <h1 className="w-full font-bold text-2xl mb-5 px-5 md:text-4xl">
+                <h1 className="w-full font-bold text-2xl mb-5 px-5 md:text-4xl m-0">
                   Postingan Unggulan
                 </h1>
                 <div className="w-full px-4">
@@ -195,7 +193,7 @@ export default function Home({ featuredPost }) {
                           }}
                         ></div>
                         <div>
-                          <h3 className="font-medium">
+                          <h3 className="font-medium m-0">
                             {featuredPost?.user?.nama}
                           </h3>
                           <small>
@@ -248,13 +246,13 @@ export default function Home({ featuredPost }) {
       )}
       {/* Featured Post section end */}
 
-      <hr className="border-2 border-black mt-32 mx-16" />
+      <hr className="border-2 border-black mt-20 mx-16" />
 
       {/* Manfaat Bergabung section start */}
-      <section id="manfaat-bergabung" className="pt-32 font-asap md:px-16">
+      <section id="manfaat-bergabung" className="pt-16 font-asap md:px-16">
         <div className="container">
           <div className="flex flex-wrap">
-            <h1 className="w-full font-bold text-2xl mb-5 px-5 md:text-4xl">
+            <h1 className="w-full font-bold text-2xl mb-5 px-5 md:text-4xl m-0">
               Manfaat Bergabung
             </h1>
             <div className="w-full px-5 mb-10 md:w-1/3">

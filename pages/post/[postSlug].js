@@ -1,22 +1,18 @@
 import HeadTitle from "../../components/headTitle";
-import styles from "../../styles/Home.module.css";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Footer from "../../components/footer";
-import Navbar from "../../components/navbar";
-import Image from "next/image";
-import { AiOutlineMenu, AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { GoLocation } from "react-icons/go";
-import { FaBirthdayCake } from "react-icons/fa";
-import { GiSuitcase } from "react-icons/gi";
-import { BsFillBookmarkFill, BsBookmark } from "react-icons/bs";
+import Heading from "../../components/heading";
+import { AiFillHeart } from "react-icons/ai";
+import { BsFillBookmarkFill } from "react-icons/bs";
 import moment from "moment";
 import "moment/locale/id";
 import Comments from "../../components/comments";
 import parse from "html-react-parser";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 export async function getStaticPaths() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/`);
@@ -156,7 +152,7 @@ function Post({ post }) {
   return (
     <>
       <HeadTitle />
-      <Navbar />
+      <Heading />
 
       {/* Post section start */}
       <section id="post" className="pt-32 font-asap bg-white">
@@ -201,11 +197,11 @@ function Post({ post }) {
                     <div
                       className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
                       style={{
-                        backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${user.foto_profil})`,
+                        backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${post.user.foto_profil})`,
                       }}
                     ></div>
                     <div>
-                      <h3 className="font-medium">{post.user.nama}</h3>
+                      <h3 className="font-medium m-0">{post.user.nama}</h3>
                       <small>
                         {moment(post.createdAt).format("LLL")}
                         {/* ({moment(post.createdAt).fromNow()}) */}
@@ -221,9 +217,14 @@ function Post({ post }) {
                       <div className="flex gap-x-1 mb-4 ">
                         {post.tags?.map((tag) => {
                           return (
-                            <a href="" key={tag.id}>
-                              #{tag.nama}
-                            </a>
+                            <Link
+                              href={{
+                                pathname: `/tag/${tag.nama}`,
+                              }}
+                              key={tag.id}
+                            >
+                              <a className="hover:text-black">#{tag.nama}</a>
+                            </Link>
                           );
                         })}
                       </div>

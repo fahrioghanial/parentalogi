@@ -1,6 +1,3 @@
-import styles from "../styles/Home.module.css";
-import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
-import { useRouter } from "next/router";
 import Footer from "../components/footer";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,9 +12,9 @@ export default function Home() {
         <div className="container  m-auto">
           <div className="flex flex-wrap ">
             <div className="w-full text-center mt-8 ">
-              <Link href="/" passHref>
+              <Link href="/dashboard" passHref>
                 <Image
-                  src="/LogoParentalogi.png"
+                  src="/logo-parentalogi.png"
                   alt="parentalogi"
                   className="py-2"
                   width="250px"
