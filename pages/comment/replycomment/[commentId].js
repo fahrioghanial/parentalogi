@@ -37,6 +37,7 @@ function ReplyComment() {
       .then((data) => {
         setOrangTua(data.id);
         setPostId(data.id_post);
+        console.log(data);
       });
   }, []);
 
@@ -81,10 +82,10 @@ function ReplyComment() {
               </div>
 
               <button
-                className="border-blue-500 border-2 rounded-lg py-2 px-4"
+                className="border-blue-500 border-2 rounded-lg py-2 px-4 hover:bg-blue-900 hover:text-white"
                 type="submit"
               >
-                Simpan
+                Kirim
               </button>
             </div>
           </div>
