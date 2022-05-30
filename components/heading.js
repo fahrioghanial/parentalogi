@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import { signOut } from "supertokens-auth-react/recipe/emailpassword";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/Link";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 
 export default function Heading() {
