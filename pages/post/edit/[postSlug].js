@@ -7,6 +7,9 @@ import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
 import { ImCross } from "react-icons/im";
 import imageCompression from "browser-image-compression";
+import ReactCrop from "react-image-crop";
+import { makeAspectCrop, centerCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 
 const EmailPasswordAuthNoSSR = dynamic(
   new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
@@ -127,7 +130,7 @@ function CreatePost() {
             }
           ).then(() => {
             console.log("post edited");
-            router.back();
+            router.push("/profile");
           });
         }
       );
@@ -145,70 +148,70 @@ function CreatePost() {
         }
       ).then(() => {
         console.log("post edited");
-        router.back();
+        router.push("/profile");
       });
     }
   };
 
-  const [baseImage, setBaseImage] = useState("");
+  // const [baseImage, setBaseImage] = useState("");
 
-  const uploadImage = async (e) => {
-    const file = e.target.files[0];
-    console.log("originalFile instanceof Blob", file instanceof Blob); // true
-    console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
+  // const uploadImage = async (e) => {
+  //   const file = e.target.files[0];
+  //   console.log("originalFile instanceof Blob", file instanceof Blob); // true
+  //   console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
 
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
-      useWebWorker: true,
-    };
+  //   const options = {
+  //     maxSizeMB: 1,
+  //     maxWidthOrHeight: 1920,
+  //     useWebWorker: true,
+  //   };
 
-    const compressedFile = await imageCompression(file, options);
-    console.log(
-      "compressedFile instanceof Blob",
-      compressedFile instanceof Blob
-    ); // true
-    console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+  //   const compressedFile = await imageCompression(file, options);
+  //   console.log(
+  //     "compressedFile instanceof Blob",
+  //     compressedFile instanceof Blob
+  //   ); // true
+  //   console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
 
-    const base64 = await convertBase64(compressedFile);
-    const base64string = await convertBase64String(compressedFile);
-    setBaseImage(base64);
-    setPostCover(base64string);
-    console.log(base64string);
-  };
+  //   const base64 = await convertBase64(compressedFile);
+  //   const base64string = await convertBase64String(compressedFile);
+  //   setBaseImage(base64);
+  //   setPostCover(base64string);
+  //   console.log(base64string);
+  // };
 
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
+  // const convertBase64 = (file) => {
+  //   return new Promise((resolve, reject) => {
+  //     const fileReader = new FileReader();
+  //     fileReader.readAsDataURL(file);
 
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
+  //     fileReader.onload = () => {
+  //       resolve(fileReader.result);
+  //     };
 
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
+  //     fileReader.onerror = (error) => {
+  //       reject(error);
+  //     };
+  //   });
+  // };
 
-  const convertBase64String = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
+  // const convertBase64String = (file) => {
+  //   return new Promise((resolve, reject) => {
+  //     const fileReader = new FileReader();
+  //     fileReader.readAsDataURL(file);
 
-      fileReader.onload = () => {
-        const base64String = fileReader.result
-          .replace("data:", "")
-          .replace(/^.+,/, "");
-        resolve(base64String);
-      };
+  //     fileReader.onload = () => {
+  //       const base64String = fileReader.result
+  //         .replace("data:", "")
+  //         .replace(/^.+,/, "");
+  //       resolve(base64String);
+  //     };
 
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
+  //     fileReader.onerror = (error) => {
+  //       reject(error);
+  //     };
+  //   });
+  // };
 
   function convertFromUrlToBase64String(url, callback) {
     var xhr = new XMLHttpRequest();
@@ -223,6 +226,75 @@ function CreatePost() {
     xhr.responseType = "blob";
     xhr.send();
   }
+
+  const [src, selectFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    selectFile(URL.createObjectURL(e.target.files[0]));
+  };
+
+  const [crop, setCrop] = useState({
+    unit: "%",
+    width: 50,
+    height: 50,
+    x: 25,
+    y: 25,
+  });
+  const [result, setResult] = useState(null);
+
+  function getCroppedImg(e) {
+    e.preventDefault();
+    const canvas = document.createElement("canvas");
+    const scaleX = selectImg.current.naturalWidth / selectImg.current.width;
+    const scaleY = selectImg.current.naturalHeight / selectImg.current.height;
+    canvas.width = (crop.width * selectImg.current.width) / 100;
+    canvas.height = (crop.height * selectImg.current.height) / 100;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      selectImg.current,
+      ((crop.x * selectImg.current.width) / 100) * scaleX,
+      ((crop.y * selectImg.current.height) / 100) * scaleY,
+      ((crop.width * selectImg.current.width) / 100) * scaleX,
+      ((crop.height * selectImg.current.height) / 100) * scaleY,
+      0,
+      0,
+      (crop.width * selectImg.current.width) / 100,
+      (crop.height * selectImg.current.height) / 100
+    );
+
+    const base64Image = canvas.toDataURL("image/jpeg");
+    const base64ImageString = canvas
+      .toDataURL("image/jpeg")
+      .replace("data:", "")
+      .replace(/^.+,/, "");
+
+    setResult(base64Image);
+    setPostCover(base64ImageString);
+  }
+
+  function onImageLoad(e) {
+    const { width, height } = e.currentTarget;
+
+    const crop = centerCrop(
+      makeAspectCrop(
+        {
+          // You don't need to pass a complete crop into
+          // makeAspectCrop or centerCrop.
+          unit: "%",
+          width: 90,
+        },
+        16 / 9,
+        width,
+        height
+      ),
+      width,
+      height
+    );
+
+    setCrop(crop);
+  }
+
+  const selectImg = useRef(null);
 
   return (
     <>
@@ -249,6 +321,8 @@ function CreatePost() {
         <form onSubmit={handleSubmit}>
           <div className="container pt-32">
             <div className="flex flex-wrap border-2 border-blue-500 p-10 rounded-lg gap-4">
+              <h1 className="text-xl font-normal m-0">Judul Post</h1>
+              {/* Input title */}
               <div className="w-full self-center">
                 <input
                   type="text"
@@ -258,8 +332,9 @@ function CreatePost() {
                   className="p-4 w-full"
                 />
               </div>
+              {/* Input Tag */}
               <div className="w-1/2 self-center flex flex-col gap-4">
-                <h1>Pilih Tags </h1>
+                <h1 className="text-xl font-normal m-0">Pilih Tags </h1>
                 <div className="flex gap-2">
                   <select
                     onChange={(e) => (tag1 = e.target.value)}
@@ -394,21 +469,45 @@ function CreatePost() {
                   </span>
                 </div>
               </div>
+              {/* Input cover */}
               <div className="w-full self-center">
-                <h1>Unggah Cover </h1>
+                <h1 className="text-xl font-normal m-0">Unggah Cover </h1>
                 <input
                   type="file"
-                  className="p-2 rounded-md mb-3 border-2"
-                  onChange={(e) => uploadImage(e)}
+                  className="p-2 rounded-md mb-3 border-2 w-full"
+                  accept="image/*"
+                  // onChange={(e) => uploadImage(e)}
+                  onChange={handleFileChange}
                 />
-                <img
-                  src={
-                    baseImage == ""
-                      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cover/${postCoverOld}`
-                      : baseImage
-                  }
-                  alt="cover"
-                />
+                {src && (
+                  <div className="flex flex-col gap-2 w-2/3">
+                    <ReactCrop
+                      crop={crop}
+                      onChange={(crop, percentCrop) => setCrop(percentCrop)}
+                      aspect={16 / 9}
+                    >
+                      <img src={src} ref={selectImg} onLoad={onImageLoad} />
+                    </ReactCrop>
+                    <button
+                      className="py-2 px-3 bg-green-500 text-white rounded-lg w-fit"
+                      onClick={getCroppedImg}
+                    >
+                      Potong Cover
+                    </button>
+                  </div>
+                )}
+
+                <div>
+                  <p className="text-lg font-normal">Hasil</p>
+                  <img
+                    src={
+                      result == null
+                        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cover/${postCoverOld}`
+                        : result
+                    }
+                    alt=""
+                  />
+                </div>
               </div>
               <div className="w-full self-center">
                 <Editor
@@ -422,7 +521,7 @@ function CreatePost() {
                 />
               </div>
               <button
-                className="border-blue-500 border-2 rounded-lg py-2 px-4"
+                className="border-blue-500 border-2 rounded-lg py-2 px-4 hover:bg-blue-900 hover:text-white"
                 type="submit"
                 onClick={combineTags}
               >

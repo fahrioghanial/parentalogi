@@ -1,6 +1,6 @@
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function NavbarLanding(props) {
   async function masukClicked() {
@@ -11,12 +11,17 @@ export default function NavbarLanding(props) {
     redirectToAuth("signup");
   }
 
+  async function goToDashboard() {
+    router.push("/dashboard");
+  }
+
   const router = useRouter();
 
   const aboutClicked = () => {
     router.push("/about");
   };
 
+  const [isLogIn, setIsLogin] = useState(false);
   useEffect(() => {
     const hamburger = document.querySelector("#hamburger");
     const navMenu = document.querySelector("#nav-menu");
@@ -24,6 +29,16 @@ export default function NavbarLanding(props) {
       hamburger.classList.toggle("hamburger-active");
       navMenu.classList.toggle("hidden");
     });
+
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.nama == null) {
+          setIsLogin(false);
+        } else setIsLogin(true);
+      });
 
     // window.onscroll = function () {
     //   const header = document.querySelector("header");
@@ -64,13 +79,13 @@ export default function NavbarLanding(props) {
                 <div className="block md:flex md:text-xl">
                   <div className="group">
                     <button
-                      className="text-white font-bold py-2 mx-8 flex group-hover:text-[#9CA3AF] text-2xl"
+                      className="text-white font-bold py-2 mx-8 flex group-hover:text-[#9CA3AF] md:text-2xl"
                       onClick={aboutClicked}
                     >
                       Tentang Kami
                     </button>
                   </div>
-                  <div className="group">
+                  <div className={`${isLogIn ? "hidden" : "visible"} group`}>
                     <button
                       className="text-white font-bold py-2 mx-8 md:m-0 flex group-hover:bg-[#9CA3AF] md:text-[#3980BF] md:bg-white md:rounded-lg md:px-3"
                       onClick={masukClicked}
@@ -78,12 +93,20 @@ export default function NavbarLanding(props) {
                       Masuk
                     </button>
                   </div>
-                  <div className="group">
+                  <div className={`${isLogIn ? "hidden" : "visible"} group`}>
                     <button
                       className="text-white font-bold py-2 mx-8 flex group-hover:bg-[#9CA3AF] md:text-[#3980BF] md:bg-white md:rounded-lg md:px-3"
                       onClick={daftarClicked}
                     >
                       Daftar
+                    </button>
+                  </div>
+                  <div className={`${isLogIn ? "visible" : "hidden"} group`}>
+                    <button
+                      className="text-white font-bold py-2 mx-8 flex group-hover:bg-[#9CA3AF] md:text-[#3980BF] md:bg-white md:rounded-lg md:px-3"
+                      onClick={goToDashboard}
+                    >
+                      Beranda
                     </button>
                   </div>
                 </div>

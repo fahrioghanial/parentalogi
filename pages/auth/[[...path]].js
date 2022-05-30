@@ -37,6 +37,11 @@ export default function Auth() {
           </h1>
         </div>
         <SuperTokensComponentNoSSR />
+        <Link href="/">
+          <a className="py-2 px-3 rounded-xl text-white font-bold md:text-xl bg-blue-500 hover:bg-blue-900 m-auto mt-5">
+            Kembali
+          </a>
+        </Link>
       </main>
     </div>
   );

@@ -85,12 +85,27 @@ function Post({ post }) {
           });
         }
       });
+
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/liked-posts`)
+      .then((res) => res.json())
+      .then((data) => {
+        {
+          data.map((rl) => {
+            if (rl.id_post == post.id) {
+              setIsLiked(true);
+            }
+          });
+        }
+      });
   }, []);
 
-  const [isLike, setIsLike] = useState("");
+  const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState();
 
   const handleLikePost = async (post_slug) => {
+    if (isLiked) {
+      setIsLiked(false);
+    }
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${post_slug}/like`,
       {
@@ -103,10 +118,17 @@ function Post({ post }) {
     )
       .then((res) => res.json())
       .then((res) => {
-        // console.log("comment deleted");
-        setIsLike(res.message);
-        console.log(isLike);
-        // router.reload(window.location.pathname);
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/liked-posts`)
+          .then((res) => res.json())
+          .then((data) => {
+            {
+              data.map((rl) => {
+                if (rl.id_post == post.id) {
+                  setIsLiked(true);
+                }
+              });
+            }
+          });
         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${post_slug}`)
           .then((res) => res.json())
           .then((data) => {
@@ -149,6 +171,21 @@ function Post({ post }) {
     return <h1>Loading...</h1>;
   }
 
+  const handleDeletePost = async (id_post) => {
+    var result = confirm("Hapus Postingan?");
+    if (result) {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${id_post}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      }).then(() => {
+        router.push("/profile");
+      });
+    }
+  };
+
   return (
     <>
       <HeadTitle />
@@ -162,9 +199,7 @@ function Post({ post }) {
               <button onClick={() => handleLikePost(post.slug)}>
                 <AiFillHeart
                   className="mb-2 hover:text-red-600 md:mx-auto"
-                  color={
-                    isLike.includes("disliking") || isLike == "" ? "" : "red"
-                  }
+                  color={isLiked ? "red" : ""}
                   size="50px"
                 />
               </button>
@@ -175,13 +210,36 @@ function Post({ post }) {
               <button onClick={() => handleReadingList(post.slug)}>
                 <BsFillBookmarkFill
                   className="mb-2 hover:text-orange-600 md:mx-auto"
-                  color={isSaved == false ? "" : "orange"}
+                  color={isSaved ? "orange" : ""}
                   size="50px"
                 />
               </button>
               <p className="text-lg mb-4 text-center md:mx-auto my-auto md:my-0">
-                {isSaved == false ? "Simpan Post?" : "Post Tersimpan!"}
+                {isSaved ? "Post Tersimpan!" : "Simpan Post?"}
               </p>
+              <div
+                className={`flex md:flex-col gap-3 ${
+                  post?.user?.nama_pengguna == user?.nama_pengguna
+                    ? "visible"
+                    : "hidden"
+                } my-auto ml-5 md:m-0 md:mt-5`}
+              >
+                <button className="rounded-xl bg-yellow-300 text-black py-2 px-3 font-semibold hover:bg-yellow-600">
+                  <Link
+                    href={{
+                      pathname: `/post/edit/${post.slug}`,
+                    }}
+                  >
+                    <a>Edit</a>
+                  </Link>
+                </button>
+                <button
+                  className="rounded-xl text-white bg-red-600 py-2 px-3 font-semibold hover:bg-red-900 "
+                  onClick={() => handleDeletePost(post.slug)}
+                >
+                  Hapus
+                </button>
+              </div>
             </div>
             <div className="w-full px-4">
               <div className="rounded-t-xl shadow-lg overflow-hidden">
@@ -197,7 +255,7 @@ function Post({ post }) {
                     <div
                       className="bg-contain bg-center bg-no-repeat rounded-full w-24 flex-none h-24 mb-2"
                       style={{
-                        backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${post.user.foto_profil})`,
+                        backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${post?.user?.foto_profil})`,
                       }}
                     ></div>
                     <div>

@@ -68,13 +68,16 @@ function DashboardPage() {
       <HeadTitle />
       <Heading />
       {/* Dashboard section start */}
-      <section id="dashboard" className="pt-24 font-asap ">
+      <section id="dashboard" className="pt-20 font-asap ">
         <div className="container">
           <div className="flex flex-wrap">
             <div className="w-full self-center px-5 md:pl-10">
-              <h1 className="font-semibold text-2xl md:text-4xl text-blue-700 mb-10">
+              <h1 className="font-semibold text-2xl md:text-4xl mb-10">
                 Cari Postingan
               </h1>
+
+              <Navbar />
+
               <form onSubmit={handleSearch} className="my-10">
                 <div className="border-blue-400 border-2 rounded-full w-1/2">
                   <input
@@ -86,8 +89,6 @@ function DashboardPage() {
                   />
                 </div>
               </form>
-
-              <Navbar />
 
               {/* card */}
 

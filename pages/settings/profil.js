@@ -1,7 +1,7 @@
 import HeadTitle from "../../components/headTitle";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Footer from "../../components/footer";
 import Heading from "../../components/heading";
@@ -9,6 +9,9 @@ import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import dynamic from "next/dynamic";
+import ReactCrop from "react-image-crop";
+import { makeAspectCrop, centerCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 
 const EmailPasswordAuthNoSSR = dynamic(
   new Promise((res) => res(EmailPassword.EmailPasswordAuth)),
@@ -215,6 +218,75 @@ function Profil() {
     }
   }
 
+  const [src, selectFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    selectFile(URL.createObjectURL(e.target.files[0]));
+  };
+
+  const [crop, setCrop] = useState({
+    unit: "%",
+    width: 50,
+    height: 50,
+    x: 25,
+    y: 25,
+  });
+  const [result, setResult] = useState(null);
+
+  function getCroppedImg(e) {
+    e.preventDefault();
+    const canvas = document.createElement("canvas");
+    const scaleX = selectImg.current.naturalWidth / selectImg.current.width;
+    const scaleY = selectImg.current.naturalHeight / selectImg.current.height;
+    canvas.width = (crop.width * selectImg.current.width) / 100;
+    canvas.height = (crop.height * selectImg.current.height) / 100;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(
+      selectImg.current,
+      ((crop.x * selectImg.current.width) / 100) * scaleX,
+      ((crop.y * selectImg.current.height) / 100) * scaleY,
+      ((crop.width * selectImg.current.width) / 100) * scaleX,
+      ((crop.height * selectImg.current.height) / 100) * scaleY,
+      0,
+      0,
+      (crop.width * selectImg.current.width) / 100,
+      (crop.height * selectImg.current.height) / 100
+    );
+
+    const base64Image = canvas.toDataURL("image/jpeg");
+    const base64ImageString = canvas
+      .toDataURL("image/jpeg")
+      .replace("data:", "")
+      .replace(/^.+,/, "");
+
+    setResult(base64Image);
+    setFotoProfil(base64ImageString);
+  }
+
+  function onImageLoad(e) {
+    const { width, height } = e.currentTarget;
+
+    const crop = centerCrop(
+      makeAspectCrop(
+        {
+          // You don't need to pass a complete crop into
+          // makeAspectCrop or centerCrop.
+          unit: "%",
+          width: 90,
+        },
+        1,
+        width,
+        height
+      ),
+      width,
+      height
+    );
+
+    setCrop(crop);
+  }
+
+  const selectImg = useRef(null);
+
   return (
     <>
       <HeadTitle />
@@ -232,12 +304,26 @@ function Profil() {
             <div className="w-full self-top md:w-1/5 px-5 md:pl-10 md:ml-16">
               <div className="rounded-xl shadow-lg overflow-hidden mb-10">
                 <div className="py-6 px-6 bg-[#3980BF] text-white flex flex-col gap-4 font-bold text-2xl">
-                  <Link href="/settings/profil" className="font-medium">
-                    Profil
-                  </Link>
-                  <Link href="/settings/akun" className="font-medium">
-                    Akun
-                  </Link>
+                  <div
+                    className={`hover:text-black ${
+                      router.pathname == "/settings/profil" ? "text-black" : ""
+                    }`}
+                  >
+                    <Link href="/settings/profil" className="font-medium">
+                      Profil
+                    </Link>
+                  </div>
+                  <div
+                    className={`hover:text-black ${
+                      router.pathname == "/settings/password"
+                        ? "text-black"
+                        : ""
+                    }`}
+                  >
+                    <Link href="/settings/password" className="font-medium">
+                      Sandi
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -288,25 +374,46 @@ function Profil() {
                       className="p-2 rounded-md w-full text-black"
                     />
                     <p className="font-medium text-xl">Foto Profil</p>
+                    {src && (
+                      <div className="flex flex-col gap-2">
+                        <ReactCrop
+                          crop={crop}
+                          onChange={(crop, percentCrop) => setCrop(percentCrop)}
+                          aspect={1}
+                          // className="w-full"
+                        >
+                          <img src={src} ref={selectImg} onLoad={onImageLoad} />
+                        </ReactCrop>
+                        <button
+                          className="py-2 px-3 bg-green-500 text-white rounded-lg w-fit"
+                          onClick={getCroppedImg}
+                        >
+                          Potong Gambar
+                        </button>
+                      </div>
+                    )}
                     <div className="flex flex-row">
                       <img
                         src={
-                          baseImage == ""
+                          result == null
                             ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/avatar/${oldFotoProfil}`
-                            : baseImage
+                            : result
                         }
-                        alt="parentalogi"
                         className="rounded-full"
-                        width="60px"
-                        height="60px"
+                        width="150px"
+                        height="150px"
                       />
+                      {/* <div className="flex flex-col gap-2"> */}
                       <input
                         type="file"
-                        onChange={(e) => uploadImage(e)}
-                        placeholder="Foto"
-                        className="ml-4 p-2 rounded-md w-full text-black bg-white"
+                        className="p-2 rounded-md ml-3 border-2 w-full bg-white my-auto"
+                        accept="image/*"
+                        // onChange={(e) => uploadImage(e)}
+                        onChange={handleFileChange}
                       />
                     </div>
+
+                    {/* </div> */}
                   </div>
                 </div>
                 {/* Segment pengguna ends*/}
@@ -347,7 +454,7 @@ function Profil() {
 
                 {/* Segment umum ends*/}
                 <button
-                  className="border-blue-500 border-2 rounded-lg py-2 px-4 float-right"
+                  className="border-blue-500 border-2 rounded-lg py-2 px-4 float-right hover:bg-blue-800 hover:text-white"
                   type="submit"
                 >
                   Simpan

@@ -12,14 +12,16 @@ export default function Home() {
         <div className="container  m-auto">
           <div className="flex flex-wrap ">
             <div className="w-full text-center mt-8 ">
-              <Link href="/dashboard" passHref>
-                <Image
-                  src="/logo-parentalogi.png"
-                  alt="parentalogi"
-                  className="py-2"
-                  width="250px"
-                  height="250px"
-                />
+              <Link href={`/dashboard`}>
+                <a>
+                  <Image
+                    src="/logo-parentalogi.png"
+                    alt="parentalogi"
+                    className="py-2"
+                    width="250px"
+                    height="250px"
+                  />
+                </a>
               </Link>
             </div>
             <div className="w-full m-auto text-center px-5 md:w-2/3 my-4 ">
@@ -88,6 +90,11 @@ export default function Home() {
               </div>
             </div>
             {/* </div> */}
+            <Link href={"/dashboard"}>
+              <a className="py-2 px-3 bg-blue-500 hover:bg-blue-900 text-white font-bold m-auto mt-10 rounded-xl md:text-xl">
+                Kembali Ke Beranda
+              </a>
+            </Link>
           </div>
         </div>
       </section>

@@ -62,11 +62,11 @@ function DashboardPage({ posts }) {
       <HeadTitle />
       <Heading />
       {/* Dashboard section start */}
-      <section id="dashboard" className="pt-24 font-asap ">
+      <section id="dashboard" className="pt-20 font-asap ">
         <div className="container">
           <div className="flex flex-wrap">
             <div className="w-full self-center px-5 md:pl-10">
-              <h1 className="font-semibold text-2xl md:text-4xl text-blue-700 mb-10">
+              <h1 className="font-semibold text-2xl md:text-4xl mb-10">
                 Daftar Bacaan
               </h1>
 

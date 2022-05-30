@@ -91,12 +91,12 @@ function Tag() {
       <HeadTitle title="Tag" />
       <Heading />
       {/* Tag section start */}
-      <section id="tag" className="pt-32 font-asap md:px-16">
+      <section id="tag" className="pt-20 font-asap md:px-10">
         <div className="container">
-          <h1 className=" font-bold text-xl md:text-4xl mb-8">
+          <h1 className=" font-bold text-xl md:text-4xl mb-10">
             Tag Terpopuler
           </h1>
-          <div className="flex flex-col md:flex-row mb-5 px-5 justify-between items-center">
+          <div className="flex flex-col md:flex-row mb-5 pr-5 justify-between items-center">
             <Navbar />
             <button
               className="w-auto text-white font-semibold py-2 text-xl hover:bg-[#9CA3AF] bg-[#3980BF] rounded-lg px-3"

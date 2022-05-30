@@ -1,10 +1,11 @@
 import HeadTitle from "../components/headTitle";
 import { redirectToAuth } from "supertokens-auth-react/recipe/emailpassword";
 import Footer from "../components/footer";
-import NavbarLanding from "../components/NavbarLanding";
+import NavbarLanding from "../components/navbarLanding";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import "moment/locale/id";
+import { useRouter } from "next/router";
 
 export async function getStaticProps() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/`);
@@ -36,6 +37,8 @@ export async function getStaticProps() {
 }
 
 export default function Home({ featuredPost }) {
+  const router = useRouter();
+
   async function daftarClicked() {
     redirectToAuth("signup");
   }
@@ -44,7 +47,13 @@ export default function Home({ featuredPost }) {
     redirectToAuth("signin");
   }
 
+  async function goToDashboard() {
+    router.push("/dashboard");
+  }
+
   const [user, setUser] = useState([]);
+  const [isLogIn, setIsLogin] = useState(false);
+
   useEffect(() => {
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${featuredPost?.user?.nama_pengguna}`
@@ -52,6 +61,15 @@ export default function Home({ featuredPost }) {
       .then((res) => res.json())
       .then((data) => {
         setUser(data);
+      });
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.nama == null) {
+          setIsLogin(false);
+        } else setIsLogin(true);
       });
   }, []);
 
@@ -85,9 +103,9 @@ export default function Home({ featuredPost }) {
               </p>
               <button
                 className="rounded-lg text-white bg-[#3980BF] text-xl py-3 px-3 hover:shadow-lg hover:opacity-80"
-                onClick={daftarClicked}
+                onClick={isLogIn ? goToDashboard : daftarClicked}
               >
-                Mulai Bergabung
+                {`${isLogIn ? "Beranda" : "Mulai Bergabung"}`}
               </button>
             </div>
           </div>

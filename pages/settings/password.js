@@ -15,15 +15,15 @@ const EmailPasswordAuthNoSSR = dynamic(
   { ssr: false }
 );
 
-export default function AkunProtected() {
+export default function PasswordProtected() {
   return (
     <EmailPasswordAuthNoSSR>
-      <Akun />
+      <Password />
     </EmailPasswordAuthNoSSR>
   );
 }
 
-function Akun() {
+function Password() {
   const router = useRouter();
 
   const [nama_pengguna, setNamaPengguna] = useState("");
@@ -155,19 +155,33 @@ function Akun() {
         <div className="container">
           <div className="md:ml-28 ml-5">
             <p className="font-asap text-[#3980BF] mb-4 text-3xl">
-              Setelan Akun untuk <b>@{nama_pengguna}</b>
+              Setelan Sandi untuk <b>@{nama_pengguna}</b>
             </p>
           </div>
           <div className="flex flex-wrap">
             <div className="w-full self-top md:w-1/5 px-5 md:pl-10 md:ml-16">
               <div className="rounded-xl shadow-lg overflow-hidden mb-10">
                 <div className="py-6 px-6 bg-[#3980BF] text-white flex flex-col gap-4 font-bold text-2xl">
-                  <Link href="/settings/profil" className="font-medium">
-                    Profil
-                  </Link>
-                  <Link href="/settings/akun" className="font-medium">
-                    Akun
-                  </Link>
+                  <div
+                    className={`hover:text-black ${
+                      router.pathname == "/settings/profil" ? "text-black" : ""
+                    }`}
+                  >
+                    <Link href="/settings/profil" className="font-medium">
+                      Profil
+                    </Link>
+                  </div>
+                  <div
+                    className={`hover:text-black ${
+                      router.pathname == "/settings/password"
+                        ? "text-black"
+                        : ""
+                    }`}
+                  >
+                    <Link href="/settings/password" className="font-medium">
+                      Sandi
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
