@@ -107,15 +107,13 @@ function Profile() {
                     <p className="text-lg mb-2">@{user.nama_pengguna}</p>
                     <p className="text-lg">{user.bio}</p>
                   </div>
-                  <div className="flex flex-col md:flex-row m-auto gap-2 text-center mb-2 px-10">
+                  <div className="flex flex-col md:flex-row m-auto items-center gap-2 text-center mb-2 px-10">
                     <GoLocation className="inline" size="20px" />
-                    <a className="text-md ml-2 mb-2 mr-6">{user.domisili}</a>
+                    <a className="text-md mb-2 md:mr-6">{user.domisili}</a>
                     <FaBirthdayCake className="inline" size="20px" />
-                    <a className="text-md ml-2 mb-2 mr-6">
-                      {user.tanggal_lahir}
-                    </a>
+                    <a className="text-md mb-2 md:mr-6">{user.tanggal_lahir}</a>
                     <GiSuitcase className="inline" size="30px" />
-                    <a className="text-md ml-2 mb-2 mr-6">{user.pekerjaan}</a>
+                    <a className="text-md mb-2 md:mr-6">{user.pekerjaan}</a>
                   </div>
                   <hr />
                   <div className="flex flex-col md:flex-row text-center px-10 justify-center m-auto gap-2">

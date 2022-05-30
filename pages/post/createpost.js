@@ -395,14 +395,16 @@ function CreatePost() {
                     onChange={handleFileChange}
                   />
                   {src && (
-                    <div className="flex flex-col gap-2 w-2/3">
-                      <ReactCrop
-                        crop={crop}
-                        onChange={(crop, percentCrop) => setCrop(percentCrop)}
-                        aspect={16 / 9}
-                      >
-                        <img src={src} ref={selectImg} onLoad={onImageLoad} />
-                      </ReactCrop>
+                    <div className="flex flex-col gap-2">
+                      <div className="w-fit">
+                        <ReactCrop
+                          crop={crop}
+                          onChange={(crop, percentCrop) => setCrop(percentCrop)}
+                          aspect={16 / 9}
+                        >
+                          <img src={src} ref={selectImg} onLoad={onImageLoad} />
+                        </ReactCrop>
+                      </div>
                       <button
                         className="py-2 px-3 bg-green-500 text-white rounded-lg w-fit"
                         onClick={getCroppedImg}

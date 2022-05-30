@@ -376,14 +376,22 @@ function Profil() {
                     <p className="font-medium text-xl">Foto Profil</p>
                     {src && (
                       <div className="flex flex-col gap-2">
-                        <ReactCrop
-                          crop={crop}
-                          onChange={(crop, percentCrop) => setCrop(percentCrop)}
-                          aspect={1}
-                          // className="w-full"
-                        >
-                          <img src={src} ref={selectImg} onLoad={onImageLoad} />
-                        </ReactCrop>
+                        <div className="w-fit">
+                          <ReactCrop
+                            crop={crop}
+                            onChange={(crop, percentCrop) =>
+                              setCrop(percentCrop)
+                            }
+                            aspect={1}
+                            // className="w-full"
+                          >
+                            <img
+                              src={src}
+                              ref={selectImg}
+                              onLoad={onImageLoad}
+                            />
+                          </ReactCrop>
+                        </div>
                         <button
                           className="py-2 px-3 bg-green-500 text-white rounded-lg w-fit"
                           onClick={getCroppedImg}
